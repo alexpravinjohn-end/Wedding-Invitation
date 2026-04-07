@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Alex & Neha's Wedding</title>
+    <style>
+        /* --- Google Fonts --- */
+        @import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Poppins:wght@300;400;600&display=swap');
+
+        /* --- Base Styles --- */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #fdfbfb 0%, #ebedee 100%);
+            color: #333;
+            overflow: hidden; /* Prevents scrolling so it feels like an app */
+        }
+
+        /* --- Page Sections --- */
+        .page {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.8s ease-in-out, visibility 0.8s;
+            text-align: center;
+            padding: 20px;
+        }
+
+        .page.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        h1 {
+            font-family: 'Dancing Script', cursive;
+            font-size: 4rem;
+            color: #d6336c;
+            margin-bottom: 20px;
+        }
+
+        p {
+            font-size: 1.2rem;
+            margin-bottom: 10px;
+        }
+
+        /* --- Buttons --- */
+        button {
+            background-color: #d6336c;
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            font-size: 1.2rem;
+            font-family: 'Poppins', sans-serif;
+            border-radius: 50px;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(214, 51, 108, 0.3);
+            transition: transform 0.2s, background-color 0.2s;
+            opacity: 0; /* Hidden initially for animation */
+            animation: popUp 0.5s forwards;
+        }
+
+        button:hover {
+            background-color: #a61e4d;
+            transform: scale(1.05);
+        }
+
+        /* Delay for the buttons so content loads first */
+        .delay-btn { animation-delay: 2s; }
+        .btn-bottom-right {
+            position: absolute;
+            bottom: 40px;
+            right: 40px;
+        }
+
+        /* --- Animations --- */
+        @keyframes popUp {
+            0% { opacity: 0; transform: translateY(20px) scale(0.9); }
+            100% { opacity: 1; transform: translateY(0) scale(1); }
+        }
+
+        @keyframes bringTogether {
+            0% { transform: translateX(-50px); opacity: 0; }
+            100% { transform: translateX(0); opacity: 1; }
+        }
+
+        @keyframes bringTogetherRight {
+            0% { transform: translateX(50px); opacity: 0; }
+            100% { transform: translateX(0); opacity: 1; }
+        }
+
+        @keyframes heartbeat {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.3); }
+        }
+
+        /* --- Page 1: Animation Styles --- */
+        .couple-animation {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            font-size: 3rem;
+            margin-bottom: 30px;
+        }
+
+        .person-left { animation: bringTogether 1.5s forwards; }
+        .person-right { animation: bringTogetherRight 1.5s forwards; }
+        .heart {
+            color: #d6336c;
+            animation: heartbeat 1.5s infinite;
+            opacity: 0;
+            animation: popUp 0.5s forwards 1.5s, heartbeat 1.5s infinite 2s; /* Pops up after they meet */
+        }
+
+        /* --- Page 3: Image Mesh --- */
+        .image-mesh {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            width: 80%;
+            max-width: 600px;
+            margin-top: 30px;
+            margin-bottom: 30px;
+        }
+
+        .mesh-item {
+            background-color: #ccc; /* Placeholder color */
+            border-radius: 10px;
+            height: 120px;
+            background-size: cover;
+            background-position: center;
+            animation: popUp 0.8s forwards;
+            opacity: 0;
+        }
+
+        /* Staggered animation for images */
+        .mesh-item:nth-child(1) { animation-delay: 0.5s; }
+        .mesh-item:nth-child(2) { animation-delay: 0.7s; }
+        .mesh-item:nth-child(3) { animation-delay: 0.9s; }
+
+        /* --- Page 4: Details Card --- */
+        .details-card {
+            background: white;
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            max-width: 500px;
+            width: 90%;
+            text-align: left;
+            animation: popUp 1s forwards;
+        }
+
+        .details-card h2 {
+            font-family: 'Dancing Script', cursive;
+            color: #d6336c;
+            font-size: 2.5rem;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .detail-row {
+            margin-bottom: 15px;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 10px;
+        }
+
+        .detail-row strong { color: #555; }
+        .links { margin-top: 20px; display: flex; flex-direction: column; gap: 10px; }
+        .links a {
+            color: #4a90e2;
+            text-decoration: none;
+            font-weight: 600;
+        }
+        .links a:hover { text-decoration: underline; }
+
+    </style>
+</head>
+<body>
+
+    <section id="page-greeting" class="page active">
+        <p style="font-size: 1.5rem; color: #666; animation: popUp 1s forwards;">You are warmly invited to celebrate with</p>
+        
+        <div class="couple-animation">
+            <div class="person-left">🧑🏽 Alex</div>
+            <div class="heart">❤️</div>
+            <div class="person-right">👩🏽 Neha</div>
+        </div>
+
+        <button class="btn-bottom-right delay-btn" onclick="goToPage('page-when')">When? 📅</button>
+    </section>
+
+    <section id="page-when" class="page">
+        <h1 style="font-size: 6rem;">May 24th</h1>
+        <p style="font-size: 2rem; color: #666; animation: popUp 1s forwards 0.5s; opacity: 0;">Mark your calendars!</p>
+        <button class="btn-bottom-right delay-btn" onclick="goToPage('page-where')">Where? 📍</button>
+    </section>
+
+    <section id="page-where" class="page">
+        <h1>Dindigul, Tamil Nadu</h1>
+        
+        <div class="image-mesh">
+            <div class="mesh-item" style="background-image: url('https://via.placeholder.com/200');"></div>
+            <div class="mesh-item" style="background-image: url('https://via.placeholder.com/200');"></div>
+            <div class="mesh-item" style="background-image: url('https://via.placeholder.com/200');"></div>
+        </div>
+
+        <button class="delay-btn" style="margin-top: 20px;" onclick="goToPage('page-details')">Give me more detail!! ✨</button>
+    </section>
+
+    <section id="page-details" class="page">
+        <div class="details-card">
+            <h2>The Wedding Details</h2>
+            
+            <div class="detail-row">
+                <strong>Groom:</strong> Alex [Last Name] <br>
+                <span style="font-size: 0.9em; color: #888;">Son of [Parents' Names]</span>
+            </div>
+            
+            <div class="detail-row">
+                <strong>Bride:</strong> Neha [Last Name] <br>
+                <span style="font-size: 0.9em; color: #888;">Daughter of [Parents' Names]</span>
+            </div>
+
+            <div class="detail-row">
+                <strong>Date & Time:</strong> May 24th, [Year] at [Time]
+            </div>
+
+            <div class="detail-row">
+                <strong>Ceremony Venue:</strong> [Church Name], Dindigul
+            </div>
+
+            <div class="detail-row">
+                <strong>Reception Venue:</strong> [Reception Hall Name], Dindigul
+            </div>
+
+            <div class="links">
+                <a href="YOUR_GOOGLE_MAPS_LINK_HERE_1" target="_blank">📍 Directions to the Church</a>
+                <a href="YOUR_GOOGLE_MAPS_LINK_HERE_2" target="_blank">📍 Directions to the Reception</a>
+            </div>
+        </div>
+    </section>
+
+    <script>
+        function goToPage(pageId) {
+            // Remove active class from all pages
+            const pages = document.querySelectorAll('.page');
+            pages.forEach(page => {
+                page.classList.remove('active');
+            });
+
+            // Add active class to the target page
+            const targetPage = document.getElementById(pageId);
+            targetPage.classList.add('active');
+
+            // Small hack to re-trigger animations on the new page
+            const elementsToAnimate = targetPage.querySelectorAll('button, .mesh-item, .details-card, p');
+            elementsToAnimate.forEach(el => {
+                el.style.animation = 'none';
+                el.offsetHeight; /* trigger reflow */
+                el.style.animation = null; 
+            });
+        }
+    </script>
+
+</body>
+</html>
