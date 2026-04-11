@@ -1,73 +1,196 @@
-<style>
-/* --- OTHER STYLES REMAIN THE SAME --- */
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Alex & Neha's Wedding</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Poppins:wght@300;400;600&display=swap');
 
-/* --- Updated Avatar/Face Styling --- */
-.face-circle {
-    /* Define the size of the circle */
-    width: clamp(100px, 20vw, 150px); /* Responsive sizing: min 100px, max 150px */
-    height: clamp(100px, 20vw, 150px);
-    
-    /* This rule creates the "round crop" display effect */
-    border-radius: 50%;
-    
-    /* Adds the frame and shadow */
-    border: 4px solid white;
-    box-shadow: 0 8px 20px rgba(0,0,0,0.15);
-    
-    /* Ensures the square image fills the circle without stretching */
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
-    
-    margin: 0 auto 15px; /* Centers the circle and adds bottom spacing */
-}
+        * { margin: 0; padding: 0; box-sizing: border-box; }
 
-/* Link the specific image files */
-.face-alex {
-    background-image: url('alex.png'); /* Groom's file */
-}
+        body, html {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #ffe6ea 0%, #fdfbfb 50%, #f3e5f5 100%);
+            color: #333;
+            width: 100%;
+            height: 100%;
+            overflow: hidden; 
+        }
 
-.face-neha {
-    background-image: url('neha.png'); /* Bride's file */
-}
+        /* --- Floating Particles (Z-index fixed to not block buttons) --- */
+        .bg-particles {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            z-index: -1; pointer-events: none; overflow: hidden;
+        }
+        .bg-particles li {
+            position: absolute; display: block; list-style: none;
+            width: 20px; height: 20px;
+            background: rgba(214, 51, 108, 0.1);
+            animation: floatUp 25s linear infinite;
+            bottom: -150px; border-radius: 50%;
+        }
+        .bg-particles li:nth-child(1) { left: 25%; width: 80px; height: 80px; }
+        .bg-particles li:nth-child(2) { left: 10%; width: 20px; height: 20px; animation-duration: 12s; }
+        .bg-particles li:nth-child(3) { left: 70%; width: 20px; height: 20px; }
+        @keyframes floatUp {
+            0% { transform: translateY(0) rotate(0deg); opacity: 1; }
+            100% { transform: translateY(-1000px) rotate(720deg); opacity: 0; }
+        }
 
-.couple-animation {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: clamp(15px, 4vw, 30px);
-    margin-bottom: 40px;
-    width: 100%;
-}
+        /* --- Page Transitions --- */
+        .page {
+            position: absolute;
+            top: 0; left: 0; width: 100vw; height: 100vh;
+            display: flex; flex-direction: column; justify-content: center; align-items: center;
+            text-align: center; padding: 20px;
+            opacity: 0;
+            transform: scale(0.9) translateY(30px);
+            visibility: hidden;
+            transition: all 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+        .page.active {
+            opacity: 1; transform: scale(1) translateY(0);
+            visibility: visible;
+        }
 
-.person-label {
-    font-size: clamp(1rem, 2.5vw, 1.2rem);
-    font-weight: 600;
-    color: #d6336c;
-}
+        h1 { font-family: 'Dancing Script', cursive; font-size: clamp(3rem, 8vw, 4.5rem); color: #d6336c; margin-bottom: 15px; }
+        .huge-text { font-size: clamp(3.5rem, 10vw, 6rem); line-height: 1.1; background: linear-gradient(45deg, #d6336c, #9c27b0); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
 
-/* --- OTHER STYLES (heart, animations, buttons) REMAIN THE SAME --- */
-</style>
+        /* --- Face Circles --- */
+        .face-circle {
+            width: clamp(110px, 25vw, 160px);
+            height: clamp(110px, 25vw, 160px);
+            border-radius: 50%;
+            border: 4px solid white;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+            background-size: cover;
+            background-position: center;
+            margin: 0 auto 10px;
+        }
+        /* CRITICAL: Ensure these filenames match exactly what you uploaded */
+        .face-alex { background-image: url('ALEX_Animated.png'); }
+        .face-neha { background-image: url('NEHA_Animated.png'); }
 
-<body>
-<section id="page-greeting" class="page active">
-        <p style="margin-bottom: 25px;">You are warmly invited to celebrate with</p>
+        .couple-animation {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        .heart { font-size: 2.5rem; color: #d6336c; animation: heartbeat 1.2s infinite; }
+
+        /* --- Buttons --- */
+        button {
+            background: linear-gradient(45deg, #d6336c, #ff4081);
+            color: white; border: none; padding: 12px 28px;
+            font-size: 1rem; font-family: 'Poppins'; font-weight: 600;
+            border-radius: 50px; cursor: pointer;
+            box-shadow: 0 6px 15px rgba(214, 51, 108, 0.3);
+            transition: 0.3s;
+            z-index: 100;
+        }
+        button:hover { transform: scale(1.05); }
+        .btn-bottom-right { position: absolute; bottom: 30px; right: 30px; }
+
+        @keyframes heartbeat { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.2); } }
+
+        /* --- Image Mesh --- */
+        .image-mesh { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; width: 100%; max-width: 500px; margin: 20px 0; }
+        .mesh-item { background-color: #eee; border-radius: 10px; height: 120px; background-size: cover; background-position: center; }
+        .mesh-item:nth-child(3) { grid-column: span 2; height: 100px; }
+
+        /* --- Details Card & Reduced Font for Parents --- */
+        .details-card {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 25px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            max-width: 450px; width: 90%; text-align: left;
+            border: 1px solid white;
+        }
+        .detail-row { margin-bottom: 12px; padding-bottom: 8px; border-bottom: 1px dashed #ffd1dc; }
+        .detail-row strong { color: #d6336c; display: block; margin-bottom: 2px; }
         
-        <div class="couple-animation">
-            <div class="person-left">
-                <div class="face-circle face-alex"></div>
-                <div class="person-label">Alex</div>
-            </div>
-            
-            <div class="heart">❤️</div>
-            
-            <div class="person-right">
-                <div class="face-circle face-neha"></div>
-                <div class="person-label">Neha</div>
-            </div>
-        </div>
+        /* The specific fix for parent lines font size */
+        .parent-info { 
+            font-size: 0.75rem; 
+            color: #777; 
+            font-weight: 300;
+            line-height: 1.2;
+        }
 
-        <button class="btn-bottom-right delay-btn" onclick="goToPage('page-when')">When? 📅</button>
+        .links a { 
+            background: #fff; color: #d6336c; text-decoration: none; font-weight: 600; 
+            display: block; padding: 10px; border-radius: 8px; text-align: center; 
+            margin-top: 8px; border: 1px solid #ffe6ea; font-size: 0.9rem;
+        }
+    </style>
+</head>
+<body>
+
+    <ul class="bg-particles"><li></li><li></li><li></li></ul>
+
+    <section id="page-greeting" class="page active">
+        <p style="margin-bottom: 15px;">You are warmly invited to celebrate with</p>
+        <div class="couple-animation">
+            <div><div class="face-circle face-alex"></div><p style="font-weight:600">Alex</p></div>
+            <div class="heart">❤️</div>
+            <div><div class="face-circle face-neha"></div><p style="font-weight:600">Neha</p></div>
+        </div>
+        <button class="btn-bottom-right" onclick="goToPage('page-when')">When? 📅</button>
     </section>
 
+    <section id="page-when" class="page">
+        <h1 class="huge-text">May 24th</h1>
+        <p>Mark your calendars for 2026! 🎉</p>
+        <button class="btn-bottom-right" onclick="goToPage('page-where')">Where? 📍</button>
+    </section>
+
+    <section id="page-where" class="page">
+        <h1>Dindigul, Tamil Nadu</h1>
+        <div class="image-mesh">
+            <div class="mesh-item" style="background-image: url('https://images.unsplash.com/photo-1511285560929-80b456fea0bc?w=300');"></div>
+            <div class="mesh-item" style="background-image: url('https://images.unsplash.com/photo-1519225421980-715cb0215aed?w=300');"></div>
+            <div class="mesh-item" style="background-image: url('https://images.unsplash.com/photo-1520854221256-17451cc331bf?w=500');"></div>
+        </div>
+        <button onclick="goToPage('page-details')">View Details ✨</button>
+    </section>
+
+    <section id="page-details" class="page">
+        <div class="details-card">
+            <h2 style="text-align:center; color:#d6336c; margin-bottom:15px; font-family:'Dancing Script'">Wedding Details</h2>
+            <div class="detail-row">
+                <strong>Groom: L Alex Pravin</strong>
+                <span class="parent-info">Son of A Leo John and S Louis Carolin Mary</span>
+            </div>
+            <div class="detail-row">
+                <strong>Bride: J Neha Lincy</strong>
+                <span class="parent-info">Daughter of V James and Suguma</span>
+            </div>
+            <div class="detail-row">
+                <strong>Date & Time:</strong> May 24th, 2026 | 10:00 AM
+            </div>
+            <div class="detail-row">
+                <strong>Ceremony:</strong> St. Joseph Church, Dindigul
+            </div>
+            <div class="detail-row">
+                <strong>Reception:</strong> Vanniyar Mahal, Dindigul
+            </div>
+            <div class="links">
+                <a href="MAP_LINK_1" target="_blank">⛪ Directions to Church</a>
+                <a href="MAP_LINK_2" target="_blank">🥂 Directions to Reception</a>
+            </div>
+        </div>
+    </section>
+
+    <script>
+        function goToPage(pageId) {
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+            const target = document.getElementById(pageId);
+            target.classList.add('active');
+        }
+    </script>
 </body>
+</html>
