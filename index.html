@@ -11,45 +11,52 @@
 
         body, html {
             font-family: 'Poppins', sans-serif;
-            background: linear-gradient(to bottom, #020111 10%, #191970 100%);
-            color: #fff;
             width: 100%; height: 100%;
             overflow: hidden; 
+            background: #fff;
         }
 
-        
-        #fireworks-canvas {
+        /* --- DAYTIME WINDOW THEME --- */
+        .main-container {
+            position: relative;
+            width: 100%; height: 100%;
+            background: linear-gradient(to bottom, #7f7fd5 0%, #86a8e7 50%, #91eae4 100%);
+            /* The Vine Window Frame */
+            border: 12px solid transparent;
+            border-image: url('https://www.transparentpng.com/download/floral/flower-floral-design-vines-png-15.png') 40 round;
+            box-shadow: inset 0 0 40px rgba(46, 125, 50, 0.2);
+            display: flex; justify-content: center; align-items: center;
+            z-index: 1;
+        }
+
+        /* Cloud Background */
+        .main-container::before {
+            content: '';
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background-image: url('https://www.transparentpng.com/download/clouds/vector-soft-clouds-png-5.png');
+            background-size: 80%; background-position: center 10%;
+            background-repeat: no-repeat; opacity: 0.25; z-index: -1;
+        }
+
+        #bloom-canvas {
             position: fixed; top: 0; left: 0;
             width: 100%; height: 100%;
             pointer-events: none; z-index: 5;
         }
 
-        /* --- Floral & Vine Decorations --- */
-        .vine {
-            position: fixed; width: 150px; height: 150px;
-            background-image: url('https://www.transparentpng.com/download/floral/flower-floral-design-vines-png-15.png');
-            background-size: contain; background-repeat: no-repeat;
-            z-index: 20; pointer-events: none;
-            filter: drop-shadow(0 0 5px #2e7d32) brightness(1.2);
-        }
-        .vine-top-left { top: -10px; left: -10px; }
-        .vine-top-right { top: -10px; right: -10px; transform: scaleX(-1); }
-
-        /* --- Back Button --- */
         #back-btn {
-            position: fixed; top: 20px; left: 20px;
-            width: 45px; height: 45px; border-radius: 50%;
-            background: rgba(255,255,255,0.1); color: #fff;
+            position: fixed; top: 25px; left: 25px;
+            width: 40px; height: 40px; border-radius: 50%;
+            background: rgba(255,255,255,0.8); color: #2e7d32;
             display: none; align-items: center; justify-content: center;
-            font-size: 1.5rem; backdrop-filter: blur(5px);
-            cursor: pointer; z-index: 1000; border: 1px solid rgba(255,255,255,0.3);
+            font-size: 1.2rem; backdrop-filter: blur(5px);
+            cursor: pointer; z-index: 1000; border: 1.5px solid #a5d6a7;
         }
 
-        /* --- Page Transitions --- */
         .page {
             position: absolute; top: 0; left: 0; width: 100vw; height: 100vh;
             display: flex; flex-direction: column; justify-content: center; align-items: center;
-            text-align: center; padding: 20px;
+            text-align: center; padding: 30px;
             opacity: 0; visibility: hidden;
             transition: opacity 0.8s ease; z-index: 10;
         }
@@ -57,189 +64,100 @@
 
         h1 { 
             font-family: 'Dancing Script', cursive; 
-            font-size: clamp(3rem, 10vw, 4.5rem); 
-            color: #fce4ec; 
-            text-shadow: 0 0 20px rgba(255, 192, 203, 0.8);
+            font-size: clamp(2.8rem, 9vw, 4rem); 
+            color: #1b5e20; 
+            text-shadow: 1px 1px 2px rgba(255,255,255,0.9);
         }
         
         .huge-text { 
-            font-size: clamp(4rem, 12vw, 6.5rem); color: #e0f2f1;
-            text-shadow: 0 0 30px rgba(178, 223, 219, 0.6);
+            font-size: clamp(4rem, 12vw, 6rem); color: #fff;
+            text-shadow: 2px 2px 10px rgba(0,0,0,0.1);
             font-weight: 800; margin: 10px 0;
         }
 
         .hang-btn {
             display: none;
-            background: linear-gradient(45deg, #1b5e20, #43a047);
-            color: white; border: none; padding: 14px 32px;
-            font-size: 1rem; font-family: 'Poppins'; font-weight: 600;
+            background: linear-gradient(45deg, #2e7d32, #66bb6a);
+            color: white; border: none; padding: 12px 30px;
+            font-size: 1rem; font-weight: 600;
             border-radius: 50px; cursor: pointer;
-            box-shadow: 0 10px 20px rgba(0,0,0,0.4);
-            margin-top: 40px;
+            box-shadow: 0 8px 15px rgba(0,0,0,0.1);
+            margin-top: 30px;
             animation: flyIn 0.8s ease-out forwards, swing 3.5s ease-in-out infinite;
             transform-origin: top center;
         }
 
-        @keyframes flyIn { 0% { transform: translateY(50px); opacity: 0; } 100% { transform: translateY(0); opacity: 1; } }
-        @keyframes swing { 0%, 100% { transform: rotate(-3deg); } 50% { transform: rotate(3deg); } }
+        @keyframes flyIn { 0% { transform: translateY(40px); opacity: 0; } 100% { transform: translateY(0); opacity: 1; } }
+        @keyframes swing { 0%, 100% { transform: rotate(-2.5deg); } 50% { transform: rotate(2.5deg); } }
 
         .face-circle {
-            width: clamp(110px, 25vw, 155px); height: clamp(110px, 25vw, 155px);
-            border-radius: 50%; border: 4px solid #fff;
-            box-shadow: 0 0 25px rgba(255,255,255,0.2);
+            width: clamp(100px, 24vw, 150px); height: clamp(100px, 24vw, 150px);
+            border-radius: 50%; border: 5px solid #fff;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
             background-size: cover; background-position: center;
-            margin-bottom: 10px;
+            margin-bottom: 8px;
         }
         .face-alex { background-image: url('ALEX_Animated.png'); }
         .face-neha { background-image: url('NEHA_Animated.png'); }
 
-        .couple-animation { display: flex; align-items: center; gap: 15px; margin-bottom: 20px; }
-        .heart { font-size: 2.2rem; color: #ff1744; animation: glow 1.5s infinite alternate; }
-        @keyframes glow { from { filter: drop-shadow(0 0 5px #ff1744); } to { filter: drop-shadow(0 0 15px #ff1744); } }
+        .couple-animation { display: flex; align-items: center; gap: 15px; margin-bottom: 15px; }
+        .heart { font-size: 2rem; color: #ff1744; animation: pulse 1.5s infinite; }
+        @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.2); } 100% { transform: scale(1); } }
 
         .details-card {
-            background: rgba(255, 255, 255, 0.07);
-            backdrop-filter: blur(12px);
-            padding: 22px; border-radius: 20px; 
-            max-width: 440px; width: 92%; text-align: left;
-            border: 1px solid rgba(255,255,255,0.2);
+            background: rgba(255, 255, 255, 0.9);
+            padding: 20px; border-radius: 18px; 
+            max-width: 420px; width: 90%; text-align: left;
+            border: 1px solid #a5d6a7;
         }
-        .detail-row { margin-bottom: 12px; padding-bottom: 8px; border-bottom: 1px solid rgba(255,255,255,0.1); }
-        .detail-row strong { color: #a5d6a7; display: block; font-size: 0.95rem; }
-        .parent-info { font-size: 0.75rem; opacity: 0.8; font-style: italic; display: block; line-height: 1.3; }
-        .time-tag { font-size: 0.85rem; color: #ffd54f; font-weight: 600; }
+        .detail-row { margin-bottom: 10px; padding-bottom: 8px; border-bottom: 1px solid #eee; }
+        .detail-row strong { color: #2e7d32; display: block; font-size: 0.9rem; }
+        .parent-info { font-size: 0.75rem; color: #666; font-style: italic; }
+        .time-tag { font-size: 0.85rem; color: #f9a825; font-weight: 600; }
 
         .map-link {
-            display: block; width: 100%; background: rgba(255,255,255,0.1); 
-            border: 1px solid #81c784; color: #81c784; padding: 12px; 
-            border-radius: 12px; text-align: center; text-decoration: none;
-            margin-top: 10px; font-weight: 600; font-size: 0.9rem; transition: 0.3s;
+            display: block; width: 100%; background: #2e7d32; 
+            color: #fff; padding: 12px; border-radius: 10px; 
+            text-align: center; text-decoration: none;
+            margin-top: 8px; font-weight: 600; font-size: 0.85rem;
         }
-        .map-link:active { background: #81c784; color: #fff; }
     </style>
 </head>
 <body>
 
-    <div class="vine vine-top-left"></div>
-    <div class="vine vine-top-right"></div>
-    <canvas id="fireworks-canvas"></canvas>
-    <div id="back-btn" onclick="goBack()">←</div>
+    <div class="main-container">
+        <canvas id="bloom-canvas"></canvas>
+        <div id="back-btn" onclick="goBack()">←</div>
 
-    <section id="page-greeting" class="page active">
-        <h1>Celestial Union</h1>
-        <div class="couple-animation">
-            <div><div class="face-circle face-alex"></div><p>Alex</p></div>
-            <div class="heart">❤️</div>
-            <div><div class="face-circle face-neha"></div><p>Neha</p></div>
-        </div>
-        <p style="font-weight: 300; letter-spacing: 2px; font-size: 0.9rem;">JOIN US FOR THE CELEBRATION</p>
-        <button class="hang-btn" onclick="goToPage('page-when')">The Date 📅</button>
-    </section>
-
-    <section id="page-when" class="page">
-        <p style="letter-spacing: 4px; font-size: 0.8rem; opacity: 0.8;">SAVE THE NIGHT</p>
-        <h1 class="huge-text">MAY 24</h1>
-        <p style="font-size: 1.2rem;">2026</p>
-        <button class="hang-btn" onclick="goToPage('page-where')">The Place 📍</button>
-    </section>
-
-    <section id="page-where" class="page">
-        <p style="letter-spacing: 2px; margin-bottom: 10px;">HOSTED AT</p>
-        <h1>Dindigul</h1>
-        <p style="opacity: 0.9;">Tamil Nadu, India</p>
-        <button class="hang-btn" onclick="goToPage('page-details')">Full Details ✨</button>
-    </section>
-
-    <section id="page-details" class="page">
-        <div class="details-card">
-            <h2 style="text-align:center; color:#81c784; margin-bottom:15px; font-family:'Dancing Script'; font-size: 2rem;">Wedding Schedule</h2>
-            
-            <div class="detail-row">
-                <strong>Groom: L Alex Pravin</strong>
-                <span class="parent-info">Son of A Leo John & S Louis Carolin Mary</span>
+        <section id="page-greeting" class="page active">
+            <h1>Celestial Union</h1>
+            <div class="couple-animation">
+                <div><div class="face-circle face-alex"></div><p style="font-weight:600; color:#1b5e20;">Alex</p></div>
+                <div class="heart">❤️</div>
+                <div><div class="face-circle face-neha"></div><p style="font-weight:600; color:#1b5e20;">Neha</p></div>
             </div>
-            
-            <div class="detail-row">
-                <strong>Bride: J Neha Lincy</strong>
-                <span class="parent-info">Daughter of V James & Suguma</span>
-            </div>
+            <p style="font-size: 0.85rem; color:#1b5e20;">INVITE YOU TO THEIR BIG DAY</p>
+            <button class="hang-btn" onclick="goToPage('page-when')">The Date 📅</button>
+        </section>
 
-            <div class="detail-row">
-                <strong>Ceremony <span class="time-tag">@ 10:00 AM</span></strong>
-                <p style="font-size: 0.85rem;">St. Joseph's Cathedral, Dindigul</p>
-                <a class="map-link" href="https://www.google.com/maps/search/?api=1&query=St.+Joseph's+Cathedral+Dindigul" target="_blank">⛪ Open in Maps</a>
-            </div>
+        <section id="page-when" class="page">
+            <p style="letter-spacing: 3px; font-size: 0.8rem; color:#1b5e20;">SAVE THE DAY</p>
+            <h1 class="huge-text">MAY 24</h1>
+            <p style="font-size: 1.1rem; color:#1b5e20;">2026</p>
+            <button class="hang-btn" onclick="goToPage('page-where')">The Place 📍</button>
+        </section>
 
-            <div class="detail-row" style="border-bottom: none;">
-                <strong>Reception <span class="time-tag">@ 12:00 PM</span></strong>
-                <p style="font-size: 0.85rem;">Vanniar Mahal, Dindigul</p>
-                <a class="map-link" href="https://www.google.com/maps/search/?api=1&query=Vanniar+Mahal+Dindigul" target="_blank">🥂 Open in Maps</a>
-            </div>
-        </div>
-    </section>
+        <section id="page-where" class="page">
+            <p style="letter-spacing: 1.5px; margin-bottom: 5px; color:#1b5e20;">HOSTED AT</p>
+            <h1>Dindigul</h1>
+            <p style="color:#1b5e20;">Tamil Nadu, India</p>
+            <button class="hang-btn" onclick="goToPage('page-details')">Full Details ✨</button>
+        </section>
 
-    <script>
-        const canvas = document.getElementById('fireworks-canvas');
-        const ctx = canvas.getContext('2d');
-        let particles = [];
-        function resize() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
-        window.addEventListener('resize', resize); resize();
-
-        class Particle {
-            constructor(x, y, color) {
-                this.x = x; this.y = y; this.color = color;
-                this.velocity = { x: (Math.random() - 0.5) * 6, y: (Math.random() - 0.5) * 6 };
-                this.alpha = 1; this.friction = 0.96;
-            }
-            draw() {
-                ctx.globalAlpha = this.alpha; ctx.beginPath();
-                ctx.arc(this.x, this.y, 1.2, 0, Math.PI * 2);
-                ctx.fillStyle = this.color; ctx.fill();
-            }
-            update() {
-                this.velocity.x *= this.friction; this.velocity.y *= this.friction;
-                this.x += this.velocity.x; this.y += this.velocity.y;
-                this.alpha -= 0.012;
-            }
-        }
-
-        function createFirework(x, y) {
-            const colors = ['#81c784', '#ff8a65', '#ba68c8', '#ffd54f', '#4fc3f7'];
-            const color = colors[Math.floor(Math.random() * colors.length)];
-            for (let i = 0; i < 25; i++) particles.push(new Particle(x, y, color));
-        }
-
-        function animate() {
-            ctx.fillStyle = 'rgba(2, 1, 17, 0.2)'; ctx.fillRect(0, 0, canvas.width, canvas.height);
-            particles.forEach((p, i) => { if (p.alpha > 0) { p.update(); p.draw(); } else { particles.splice(i, 1); } });
-            requestAnimationFrame(animate);
-        }
-        animate();
-        setInterval(() => { if (document.visibilityState === 'visible') createFirework(Math.random()*canvas.width, Math.random()*canvas.height*0.5); }, 1800);
-
-        const pageHistory = ['page-greeting', 'page-when', 'page-where', 'page-details'];
-        let currentIndex = 0;
-
-        function showButton() {
-            const activePage = document.querySelector('.page.active');
-            const btn = activePage.querySelector('.hang-btn');
-            if (btn) {
-                btn.style.display = 'none';
-                setTimeout(() => { btn.style.display = 'inline-block'; }, 2000);
-            }
-        }
-
-        function goToPage(pageId) {
-            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-            document.getElementById(pageId).classList.add('active');
-            currentIndex = pageHistory.indexOf(pageId);
-            document.getElementById('back-btn').style.display = (currentIndex === 0) ? 'none' : 'flex';
-            showButton();
-            createFirework(window.innerWidth/2, window.innerHeight/2);
-        }
-
-        function goBack() { if (currentIndex > 0) { currentIndex--; goToPage(pageHistory[currentIndex]); } }
-        window.onload = showButton;
-    </script>
-</body>
-</html>
+        <section id="page-details" class="page">
+            <div class="details-card">
+                <h2 style="text-align:center; color:#2e7d32; margin-bottom:12px; font-family:'Dancing Script'; font-size: 1.8rem;">Wedding Schedule</h2>
+                <div class="detail-row"><strong>L Alex Pravin (Groom)</strong><span class="parent-info">Son of A Leo John & S Louis Carolin Mary</span></div>
+                <div class="detail-row"><strong>J Neha Lincy (Bride)</strong><span class="parent-info">Daughter of V James & Suguma</span></div>
+                <div class="detail-row">
+                    <strong>Ceremony <span class="time-tag">@ 10:00 AM
