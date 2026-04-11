@@ -11,111 +11,79 @@
 
         body, html {
             font-family: 'Poppins', sans-serif;
-            /* Night Sky Gradient */
             background: linear-gradient(to bottom, #020111 10%, #191970 100%);
             color: #fff;
-            width: 100%;
-            height: 100%;
+            width: 100%; height: 100%;
             overflow: hidden; 
         }
 
         #fireworks-canvas {
-            position: fixed;
-            top: 0; left: 0;
+            position: fixed; top: 0; left: 0;
             width: 100%; height: 100%;
-            pointer-events: none;
-            z-index: 5;
+            pointer-events: none; z-index: 5;
         }
 
         /* --- Floral & Vine Decorations --- */
         .vine {
-            position: fixed;
-            width: 150px;
-            height: 150px;
+            position: fixed; width: 150px; height: 150px;
             background-image: url('https://www.transparentpng.com/download/floral/flower-floral-design-vines-png-15.png');
-            background-size: contain;
-            background-repeat: no-repeat;
-            z-index: 20;
-            pointer-events: none;
-            filter: drop-shadow(0 0 5px #2e7d32);
+            background-size: contain; background-repeat: no-repeat;
+            z-index: 20; pointer-events: none;
+            filter: drop-shadow(0 0 5px #2e7d32) brightness(1.2);
         }
-        .vine-top-left { top: -10px; left: -10px; transform: rotate(0deg); }
-        .vine-top-right { top: -10px; right: -10px; transform: rotate(90deg); }
+        .vine-top-left { top: -10px; left: -10px; }
+        .vine-top-right { top: -10px; right: -10px; transform: scaleX(-1); }
 
         /* --- Back Button --- */
         #back-btn {
-            position: fixed;
-            top: 20px; left: 20px;
-            width: 45px; height: 45px;
-            border-radius: 50%;
-            background: rgba(255,255,255,0.1);
-            color: #fff;
-            display: none;
-            align-items: center; justify-content: center;
-            font-size: 1.5rem;
-            backdrop-filter: blur(5px);
-            cursor: pointer;
-            z-index: 1000;
-            border: 1px solid rgba(255,255,255,0.3);
+            position: fixed; top: 20px; left: 20px;
+            width: 45px; height: 45px; border-radius: 50%;
+            background: rgba(255,255,255,0.1); color: #fff;
+            display: none; align-items: center; justify-content: center;
+            font-size: 1.5rem; backdrop-filter: blur(5px);
+            cursor: pointer; z-index: 1000; border: 1px solid rgba(255,255,255,0.3);
         }
 
         /* --- Page Transitions --- */
         .page {
-            position: absolute;
-            top: 0; left: 0; width: 100vw; height: 100vh;
+            position: absolute; top: 0; left: 0; width: 100vw; height: 100vh;
             display: flex; flex-direction: column; justify-content: center; align-items: center;
             text-align: center; padding: 20px;
-            opacity: 0;
-            visibility: hidden;
-            transition: opacity 0.8s ease;
-            z-index: 10;
+            opacity: 0; visibility: hidden;
+            transition: opacity 0.8s ease; z-index: 10;
         }
         .page.active { opacity: 1; visibility: visible; }
 
         h1 { 
             font-family: 'Dancing Script', cursive; 
-            font-size: clamp(3.5rem, 10vw, 5rem); 
+            font-size: clamp(3rem, 10vw, 4.5rem); 
             color: #fce4ec; 
             text-shadow: 0 0 20px rgba(255, 192, 203, 0.8);
         }
         
         .huge-text { 
-            font-size: clamp(4rem, 12vw, 7rem); 
-            color: #e0f2f1;
+            font-size: clamp(4rem, 12vw, 6.5rem); color: #e0f2f1;
             text-shadow: 0 0 30px rgba(178, 223, 219, 0.6);
-            font-weight: 800;
-            margin: 20px 0;
+            font-weight: 800; margin: 10px 0;
         }
 
-        /* --- Animated Hanging Button --- */
         .hang-btn {
-            display: none; /* Controlled by JS delay */
-            background: linear-gradient(45deg, #2e7d32, #66bb6a);
-            color: white; border: none; padding: 12px 30px;
+            display: none;
+            background: linear-gradient(45deg, #1b5e20, #43a047);
+            color: white; border: none; padding: 14px 32px;
             font-size: 1rem; font-family: 'Poppins'; font-weight: 600;
             border-radius: 50px; cursor: pointer;
-            box-shadow: 0 10px 20px rgba(0,0,0,0.3);
-            text-transform: uppercase;
-            position: relative;
-            margin-top: 50px;
-            animation: flyIn 1s ease-out forwards, swing 3s ease-in-out infinite;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.4);
+            margin-top: 40px;
+            animation: flyIn 0.8s ease-out forwards, swing 3.5s ease-in-out infinite;
             transform-origin: top center;
         }
 
-        /* Animation for flying in and hanging */
-        @keyframes flyIn {
-            0% { transform: translateY(100px); opacity: 0; }
-            100% { transform: translateY(0); opacity: 1; }
-        }
-        /* Pendulum-like oscillation */
-        @keyframes swing {
-            0% { transform: rotate(-3deg); }
-            50% { transform: rotate(3deg); }
-            100% { transform: rotate(-3deg); }
-        }
+        @keyframes flyIn { 0% { transform: translateY(50px); opacity: 0; } 100% { transform: translateY(0); opacity: 1; } }
+        @keyframes swing { 0%, 100% { transform: rotate(-3deg); } 50% { transform: rotate(3deg); } }
 
         .face-circle {
-            width: clamp(120px, 28vw, 170px); height: clamp(120px, 28vw, 170px);
+            width: clamp(110px, 25vw, 155px); height: clamp(110px, 25vw, 155px);
             border-radius: 50%; border: 4px solid #fff;
             box-shadow: 0 0 25px rgba(255,255,255,0.2);
             background-size: cover; background-position: center;
@@ -124,26 +92,29 @@
         .face-alex { background-image: url('ALEX_Animated.png'); }
         .face-neha { background-image: url('NEHA_Animated.png'); }
 
-        .couple-animation { display: flex; align-items: center; gap: 20px; margin-bottom: 20px; }
-        .heart { font-size: 2.5rem; color: #ff1744; animation: glowHeart 1.5s infinite alternate; }
-        @keyframes glowHeart { from { filter: drop-shadow(0 0 5px #ff1744); } to { filter: drop-shadow(0 0 20px #ff1744); } }
+        .couple-animation { display: flex; align-items: center; gap: 15px; margin-bottom: 20px; }
+        .heart { font-size: 2.2rem; color: #ff1744; animation: glow 1.5s infinite alternate; }
+        @keyframes glow { from { filter: drop-shadow(0 0 5px #ff1744); } to { filter: drop-shadow(0 0 15px #ff1744); } }
 
         .details-card {
-            background: rgba(255, 255, 255, 0.05);
-            backdrop-filter: blur(15px);
-            padding: 25px; border-radius: 25px; 
-            max-width: 480px; width: 90%; text-align: left;
+            background: rgba(255, 255, 255, 0.07);
+            backdrop-filter: blur(12px);
+            padding: 22px; border-radius: 20px; 
+            max-width: 440px; width: 92%; text-align: left;
             border: 1px solid rgba(255,255,255,0.2);
         }
         .detail-row { margin-bottom: 12px; padding-bottom: 8px; border-bottom: 1px solid rgba(255,255,255,0.1); }
-        .detail-row strong { color: #81c784; }
-        .parent-info { font-size: 0.8rem; opacity: 0.7; font-style: italic; }
-        
-        .map-btn {
-            background: rgba(255,255,255,0.1); border: 1px solid #81c784;
-            color: #81c784; padding: 10px; border-radius: 10px;
-            width: 100%; margin-top: 10px; cursor: pointer; font-weight: 600;
+        .detail-row strong { color: #a5d6a7; display: block; font-size: 0.95rem; }
+        .parent-info { font-size: 0.75rem; opacity: 0.8; font-style: italic; display: block; line-height: 1.3; }
+        .time-tag { font-size: 0.85rem; color: #ffd54f; font-weight: 600; }
+
+        .map-link {
+            display: block; width: 100%; background: rgba(255,255,255,0.1); 
+            border: 1px solid #81c784; color: #81c784; padding: 12px; 
+            border-radius: 12px; text-align: center; text-decoration: none;
+            margin-top: 10px; font-weight: 600; font-size: 0.9rem; transition: 0.3s;
         }
+        .map-link:active { background: #81c784; color: #fff; }
     </style>
 </head>
 <body>
@@ -160,51 +131,53 @@
             <div class="heart">❤️</div>
             <div><div class="face-circle face-neha"></div><p>Neha</p></div>
         </div>
-        <p style="font-weight: 300; letter-spacing: 2px;">INVITE YOU TO THEIR BIG DAY</p>
+        <p style="font-weight: 300; letter-spacing: 2px; font-size: 0.9rem;">JOIN US FOR THE CELEBRATION</p>
         <button class="hang-btn" onclick="goToPage('page-when')">The Date 📅</button>
     </section>
 
     <section id="page-when" class="page">
-        <p style="letter-spacing: 5px;">SAVE THE NIGHT</p>
+        <p style="letter-spacing: 4px; font-size: 0.8rem; opacity: 0.8;">SAVE THE NIGHT</p>
         <h1 class="huge-text">MAY 24</h1>
-        <p>2026 • 10:00 AM</p>
+        <p style="font-size: 1.2rem;">2026</p>
         <button class="hang-btn" onclick="goToPage('page-where')">The Place 📍</button>
     </section>
 
     <section id="page-where" class="page">
+        <p style="letter-spacing: 2px; margin-bottom: 10px;">HOSTED AT</p>
         <h1>Dindigul</h1>
-        <p>Tamil Nadu, India</p>
+        <p style="opacity: 0.9;">Tamil Nadu, India</p>
         <button class="hang-btn" onclick="goToPage('page-details')">Full Details ✨</button>
     </section>
 
     <section id="page-details" class="page">
         <div class="details-card">
-            <h2 style="text-align:center; color:#81c784; margin-bottom:15px; font-family:'Dancing Script'; font-size: 2.2rem;">Wedding Details</h2>
+            <h2 style="text-align:center; color:#81c784; margin-bottom:15px; font-family:'Dancing Script'; font-size: 2rem;">Wedding Schedule</h2>
+            
             <div class="detail-row">
                 <strong>Groom: L Alex Pravin</strong>
                 <span class="parent-info">Son of A Leo John & S Louis Carolin Mary</span>
             </div>
+            
             <div class="detail-row">
                 <strong>Bride: J Neha Lincy</strong>
                 <span class="parent-info">Daughter of V James & Suguma</span>
             </div>
-            <div class="detail-row">
 
-http://googleusercontent.com/map_location_reference/1
-                <strong>Ceremony:</strong> [St. Joseph's Cathedral, Dindigul Diocese](http://googleusercontent.com/map_location_reference/0)
-            </div>
             <div class="detail-row">
-
-http://googleusercontent.com/map_location_reference/3
-                <strong>Reception:</strong> [Vanniar Mahal](http://googleusercontent.com/map_location_reference/2)
+                <strong>Ceremony <span class="time-tag">@ 10:00 AM</span></strong>
+                <p style="font-size: 0.85rem;">St. Joseph's Cathedral, Dindigul</p>
+                <a class="map-link" href="https://www.google.com/maps/search/?api=1&query=St.+Joseph's+Cathedral+Dindigul" target="_blank">⛪ Open in Maps</a>
             </div>
-            <button class="map-btn" onclick="window.location.href='https://www.google.com/maps/search/?api=1&query=St.+Josephs+Cathedral+Dindigul'">⛪ Church Location</button>
-            <button class="map-btn" onclick="window.location.href='https://www.google.com/maps/search/?api=1&query=Vanniar+Mahal+Dindigul'">🥂 Reception Location</button>
+
+            <div class="detail-row" style="border-bottom: none;">
+                <strong>Reception <span class="time-tag">@ 12:00 PM</span></strong>
+                <p style="font-size: 0.85rem;">Vanniar Mahal, Dindigul</p>
+                <a class="map-link" href="https://www.google.com/maps/search/?api=1&query=Vanniar+Mahal+Dindigul" target="_blank">🥂 Open in Maps</a>
+            </div>
         </div>
     </section>
 
     <script>
-        // --- FIREWORKS ---
         const canvas = document.getElementById('fireworks-canvas');
         const ctx = canvas.getContext('2d');
         let particles = [];
@@ -219,7 +192,7 @@ http://googleusercontent.com/map_location_reference/3
             }
             draw() {
                 ctx.globalAlpha = this.alpha; ctx.beginPath();
-                ctx.arc(this.x, this.y, 1.5, 0, Math.PI * 2);
+                ctx.arc(this.x, this.y, 1.2, 0, Math.PI * 2);
                 ctx.fillStyle = this.color; ctx.fill();
             }
             update() {
@@ -232,21 +205,17 @@ http://googleusercontent.com/map_location_reference/3
         function createFirework(x, y) {
             const colors = ['#81c784', '#ff8a65', '#ba68c8', '#ffd54f', '#4fc3f7'];
             const color = colors[Math.floor(Math.random() * colors.length)];
-            for (let i = 0; i < 30; i++) particles.push(new Particle(x, y, color));
+            for (let i = 0; i < 25; i++) particles.push(new Particle(x, y, color));
         }
 
         function animate() {
-            ctx.fillStyle = 'rgba(2, 1, 17, 0.15)';
-            ctx.fillRect(0, 0, canvas.width, canvas.height);
-            particles.forEach((p, i) => {
-                if (p.alpha > 0) { p.update(); p.draw(); } else { particles.splice(i, 1); }
-            });
+            ctx.fillStyle = 'rgba(2, 1, 17, 0.2)'; ctx.fillRect(0, 0, canvas.width, canvas.height);
+            particles.forEach((p, i) => { if (p.alpha > 0) { p.update(); p.draw(); } else { particles.splice(i, 1); } });
             requestAnimationFrame(animate);
         }
         animate();
-        setInterval(() => { if (document.visibilityState === 'visible') createFirework(Math.random()*canvas.width, Math.random()*canvas.height*0.5); }, 1500);
+        setInterval(() => { if (document.visibilityState === 'visible') createFirework(Math.random()*canvas.width, Math.random()*canvas.height*0.5); }, 1800);
 
-        // --- NAVIGATION ---
         const pageHistory = ['page-greeting', 'page-when', 'page-where', 'page-details'];
         let currentIndex = 0;
 
@@ -269,8 +238,6 @@ http://googleusercontent.com/map_location_reference/3
         }
 
         function goBack() { if (currentIndex > 0) { currentIndex--; goToPage(pageHistory[currentIndex]); } }
-        
-        // Initial button delay for first page
         window.onload = showButton;
     </script>
 </body>
