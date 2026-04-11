@@ -11,22 +11,36 @@
 
         body, html {
             font-family: 'Poppins', sans-serif;
-            /* Carnival Gradient: Bright and energetic */
-            background: radial-gradient(circle at center, #fff5f7 0%, #fee1e8 100%);
-            color: #333;
+            /* Night Sky Gradient */
+            background: linear-gradient(to bottom, #020111 10%, #191970 100%);
+            color: #fff;
             width: 100%;
             height: 100%;
             overflow: hidden; 
         }
 
-        /* Fireworks Canvas */
         #fireworks-canvas {
             position: fixed;
             top: 0; left: 0;
             width: 100%; height: 100%;
-            pointer-events: none; /* Allows clicking buttons through fireworks */
+            pointer-events: none;
             z-index: 5;
         }
+
+        /* --- Floral & Vine Decorations --- */
+        .vine {
+            position: fixed;
+            width: 150px;
+            height: 150px;
+            background-image: url('https://www.transparentpng.com/download/floral/flower-floral-design-vines-png-15.png');
+            background-size: contain;
+            background-repeat: no-repeat;
+            z-index: 20;
+            pointer-events: none;
+            filter: drop-shadow(0 0 5px #2e7d32);
+        }
+        .vine-top-left { top: -10px; left: -10px; transform: rotate(0deg); }
+        .vine-top-right { top: -10px; right: -10px; transform: rotate(90deg); }
 
         /* --- Back Button --- */
         #back-btn {
@@ -34,15 +48,15 @@
             top: 20px; left: 20px;
             width: 45px; height: 45px;
             border-radius: 50%;
-            background: white;
-            color: #ff4081;
+            background: rgba(255,255,255,0.1);
+            color: #fff;
             display: none;
             align-items: center; justify-content: center;
             font-size: 1.5rem;
-            box-shadow: 0 4px 15px rgba(214, 51, 108, 0.3);
+            backdrop-filter: blur(5px);
             cursor: pointer;
             z-index: 1000;
-            border: 2px solid #ff4081;
+            border: 1px solid rgba(255,255,255,0.3);
         }
 
         /* --- Page Transitions --- */
@@ -52,113 +66,120 @@
             display: flex; flex-direction: column; justify-content: center; align-items: center;
             text-align: center; padding: 20px;
             opacity: 0;
-            transform: scale(0.95);
             visibility: hidden;
-            transition: all 0.5s ease-out;
+            transition: opacity 0.8s ease;
             z-index: 10;
         }
-        .page.active { opacity: 1; transform: scale(1); visibility: visible; }
+        .page.active { opacity: 1; visibility: visible; }
 
-        /* Typography with Carnival Colors */
         h1 { 
             font-family: 'Dancing Script', cursive; 
-            font-size: clamp(3.5rem, 10vw, 5.5rem); 
-            color: #d6336c; 
-            text-shadow: 3px 3px 0px #fff, 5px 5px 15px rgba(0,0,0,0.1);
+            font-size: clamp(3.5rem, 10vw, 5rem); 
+            color: #fce4ec; 
+            text-shadow: 0 0 20px rgba(255, 192, 203, 0.8);
         }
+        
         .huge-text { 
             font-size: clamp(4rem, 12vw, 7rem); 
-            background: linear-gradient(to right, #ff4081, #ffab40, #00e5ff);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
+            color: #e0f2f1;
+            text-shadow: 0 0 30px rgba(178, 223, 219, 0.6);
             font-weight: 800;
+            margin: 20px 0;
         }
 
-        /* Face Circles */
-        .face-circle {
-            width: clamp(120px, 28vw, 170px);
-            height: clamp(120px, 28vw, 170px);
-            border-radius: 50%;
-            border: 6px solid #fff;
-            box-shadow: 0 10px 30px rgba(214, 51, 108, 0.3);
-            background-size: cover;
-            background-position: center;
-            margin-bottom: 10px;
-            /* Fun rocking animation */
-            animation: rock 3s ease-in-out infinite;
-        }
-        @keyframes rock {
-            0%, 100% { transform: rotate(-3deg); }
-            50% { transform: rotate(3deg); }
-        }
-
-        .face-alex { background-image: url('ALEX_Animated.png'); }
-        .face-neha { background-image: url('NEHA_Animated.png'); animation-delay: 0.5s; }
-
-        .couple-animation { display: flex; align-items: center; gap: 20px; margin-bottom: 30px; }
-        .heart { font-size: 3rem; animation: heartbeat 0.8s infinite; filter: drop-shadow(0 0 10px #ff4081); }
-
-        /* Carnival Buttons */
-        button {
-            background: linear-gradient(45deg, #ff4081, #ffab40);
-            color: white; border: none; padding: 15px 35px;
-            font-size: 1.2rem; font-family: 'Poppins'; font-weight: 700;
+        /* --- Animated Hanging Button --- */
+        .hang-btn {
+            display: none; /* Controlled by JS delay */
+            background: linear-gradient(45deg, #2e7d32, #66bb6a);
+            color: white; border: none; padding: 12px 30px;
+            font-size: 1rem; font-family: 'Poppins'; font-weight: 600;
             border-radius: 50px; cursor: pointer;
-            box-shadow: 0 8px 0px #c2185b, 0 15px 25px rgba(0,0,0,0.2);
-            transition: 0.1s;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.3);
             text-transform: uppercase;
-            letter-spacing: 1px;
+            position: relative;
+            margin-top: 50px;
+            animation: flyIn 1s ease-out forwards, swing 3s ease-in-out infinite;
+            transform-origin: top center;
         }
-        button:active { transform: translateY(4px); box-shadow: 0 4px 0px #c2185b; }
-        .btn-bottom-right { position: absolute; bottom: 40px; right: 40px; }
 
-        /* Details Card */
+        /* Animation for flying in and hanging */
+        @keyframes flyIn {
+            0% { transform: translateY(100px); opacity: 0; }
+            100% { transform: translateY(0); opacity: 1; }
+        }
+        /* Pendulum-like oscillation */
+        @keyframes swing {
+            0% { transform: rotate(-3deg); }
+            50% { transform: rotate(3deg); }
+            100% { transform: rotate(-3deg); }
+        }
+
+        .face-circle {
+            width: clamp(120px, 28vw, 170px); height: clamp(120px, 28vw, 170px);
+            border-radius: 50%; border: 4px solid #fff;
+            box-shadow: 0 0 25px rgba(255,255,255,0.2);
+            background-size: cover; background-position: center;
+            margin-bottom: 10px;
+        }
+        .face-alex { background-image: url('ALEX_Animated.png'); }
+        .face-neha { background-image: url('NEHA_Animated.png'); }
+
+        .couple-animation { display: flex; align-items: center; gap: 20px; margin-bottom: 20px; }
+        .heart { font-size: 2.5rem; color: #ff1744; animation: glowHeart 1.5s infinite alternate; }
+        @keyframes glowHeart { from { filter: drop-shadow(0 0 5px #ff1744); } to { filter: drop-shadow(0 0 20px #ff1744); } }
+
         .details-card {
-            background: rgba(255, 255, 255, 0.9);
-            padding: 30px; border-radius: 30px; 
-            box-shadow: 0 20px 50px rgba(0,0,0,0.1);
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(15px);
+            padding: 25px; border-radius: 25px; 
             max-width: 480px; width: 90%; text-align: left;
-            border: 3px solid #ffeb3b;
+            border: 1px solid rgba(255,255,255,0.2);
         }
-        .detail-row { margin-bottom: 15px; padding-bottom: 10px; border-bottom: 2px dashed #ffab40; }
-        .detail-row strong { color: #d6336c; font-size: 1.1rem; }
-        .parent-info { font-size: 0.8rem; color: #666; font-style: italic; }
-
-        @keyframes heartbeat { 0% { transform: scale(1); } 50% { transform: scale(1.3); } 100% { transform: scale(1); } }
+        .detail-row { margin-bottom: 12px; padding-bottom: 8px; border-bottom: 1px solid rgba(255,255,255,0.1); }
+        .detail-row strong { color: #81c784; }
+        .parent-info { font-size: 0.8rem; opacity: 0.7; font-style: italic; }
+        
+        .map-btn {
+            background: rgba(255,255,255,0.1); border: 1px solid #81c784;
+            color: #81c784; padding: 10px; border-radius: 10px;
+            width: 100%; margin-top: 10px; cursor: pointer; font-weight: 600;
+        }
     </style>
 </head>
 <body>
 
+    <div class="vine vine-top-left"></div>
+    <div class="vine vine-top-right"></div>
     <canvas id="fireworks-canvas"></canvas>
     <div id="back-btn" onclick="goBack()">←</div>
 
     <section id="page-greeting" class="page active">
-        <h1 style="margin-bottom: 20px;">Let's Party!</h1>
+        <h1>Celestial Union</h1>
         <div class="couple-animation">
-            <div><div class="face-circle face-alex"></div><p style="font-weight:700; color:#c2185b">Alex</p></div>
+            <div><div class="face-circle face-alex"></div><p>Alex</p></div>
             <div class="heart">❤️</div>
-            <div><div class="face-circle face-neha"></div><p style="font-weight:700; color:#c2185b">Neha</p></div>
+            <div><div class="face-circle face-neha"></div><p>Neha</p></div>
         </div>
-        <p style="margin-bottom: 20px; font-weight: 300;">ARE TYING THE KNOT!</p>
-        <button class="btn-bottom-right" onclick="goToPage('page-when')">The Date 📅</button>
+        <p style="font-weight: 300; letter-spacing: 2px;">INVITE YOU TO THEIR BIG DAY</p>
+        <button class="hang-btn" onclick="goToPage('page-when')">The Date 📅</button>
     </section>
 
     <section id="page-when" class="page">
-        <p style="text-transform: uppercase; letter-spacing: 3px;">Save The Date</p>
+        <p style="letter-spacing: 5px;">SAVE THE NIGHT</p>
         <h1 class="huge-text">MAY 24</h1>
         <p>2026 • 10:00 AM</p>
-        <button class="btn-bottom-right" onclick="goToPage('page-where')">Location 📍</button>
+        <button class="hang-btn" onclick="goToPage('page-where')">The Place 📍</button>
     </section>
 
     <section id="page-where" class="page">
         <h1>Dindigul</h1>
-        <p style="margin-bottom: 20px;">The Celebration Hub</p>
-        <button onclick="goToPage('page-details')">Full Info ✨</button>
+        <p>Tamil Nadu, India</p>
+        <button class="hang-btn" onclick="goToPage('page-details')">Full Details ✨</button>
     </section>
 
     <section id="page-details" class="page">
         <div class="details-card">
-            <h2 style="text-align:center; color:#ff4081; margin-bottom:20px; font-family:'Dancing Script'; font-size: 2.5rem;">Join the Fun!</h2>
+            <h2 style="text-align:center; color:#81c784; margin-bottom:15px; font-family:'Dancing Script'; font-size: 2.2rem;">Wedding Details</h2>
             <div class="detail-row">
                 <strong>Groom: L Alex Pravin</strong>
                 <span class="parent-info">Son of A Leo John & S Louis Carolin Mary</span>
@@ -168,105 +189,89 @@
                 <span class="parent-info">Daughter of V James & Suguma</span>
             </div>
             <div class="detail-row">
-                <strong>Ceremony:</strong> St. Joseph Church, Dindigul
+
+http://googleusercontent.com/map_location_reference/1
+                <strong>Ceremony:</strong> [St. Joseph's Cathedral, Dindigul Diocese](http://googleusercontent.com/map_location_reference/0)
             </div>
             <div class="detail-row">
-                <strong>Reception:</strong> Vanniyar Mahal, Dindigul
+
+http://googleusercontent.com/map_location_reference/3
+                <strong>Reception:</strong> [Vanniar Mahal](http://googleusercontent.com/map_location_reference/2)
             </div>
-            <button style="width: 100%; margin-top: 10px;" onclick="window.open('#')">Get Directions ⛪</button>
+            <button class="map-btn" onclick="window.location.href='https://www.google.com/maps/search/?api=1&query=St.+Josephs+Cathedral+Dindigul'">⛪ Church Location</button>
+            <button class="map-btn" onclick="window.location.href='https://www.google.com/maps/search/?api=1&query=Vanniar+Mahal+Dindigul'">🥂 Reception Location</button>
         </div>
     </section>
 
     <script>
-        // --- FIREWORKS SYSTEM ---
+        // --- FIREWORKS ---
         const canvas = document.getElementById('fireworks-canvas');
         const ctx = canvas.getContext('2d');
         let particles = [];
-
-        function resize() {
-            canvas.width = window.innerWidth;
-            canvas.height = window.innerHeight;
-        }
-        window.addEventListener('resize', resize);
-        resize();
+        function resize() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
+        window.addEventListener('resize', resize); resize();
 
         class Particle {
             constructor(x, y, color) {
                 this.x = x; this.y = y; this.color = color;
-                this.velocity = {
-                    x: (Math.random() - 0.5) * 8,
-                    y: (Math.random() - 0.5) * 8
-                };
-                this.alpha = 1;
-                this.friction = 0.95;
+                this.velocity = { x: (Math.random() - 0.5) * 6, y: (Math.random() - 0.5) * 6 };
+                this.alpha = 1; this.friction = 0.96;
             }
             draw() {
-                ctx.globalAlpha = this.alpha;
-                ctx.beginPath();
-                ctx.arc(this.x, this.y, 2, 0, Math.PI * 2);
-                ctx.fillStyle = this.color;
-                ctx.fill();
+                ctx.globalAlpha = this.alpha; ctx.beginPath();
+                ctx.arc(this.x, this.y, 1.5, 0, Math.PI * 2);
+                ctx.fillStyle = this.color; ctx.fill();
             }
             update() {
-                this.velocity.x *= this.friction;
-                this.velocity.y *= this.friction;
-                this.x += this.velocity.x;
-                this.y += this.velocity.y;
-                this.alpha -= 0.01;
+                this.velocity.x *= this.friction; this.velocity.y *= this.friction;
+                this.x += this.velocity.x; this.y += this.velocity.y;
+                this.alpha -= 0.012;
             }
         }
 
         function createFirework(x, y) {
-            const colors = ['#ff4081', '#ffab40', '#00e5ff', '#ffeb3b', '#76ff03'];
+            const colors = ['#81c784', '#ff8a65', '#ba68c8', '#ffd54f', '#4fc3f7'];
             const color = colors[Math.floor(Math.random() * colors.length)];
-            for (let i = 0; i < 40; i++) {
-                particles.push(new Particle(x, y, color));
-            }
+            for (let i = 0; i < 30; i++) particles.push(new Particle(x, y, color));
         }
 
         function animate() {
-            ctx.fillStyle = 'rgba(255, 245, 247, 0.2)'; // Faint trail
+            ctx.fillStyle = 'rgba(2, 1, 17, 0.15)';
             ctx.fillRect(0, 0, canvas.width, canvas.height);
-            
             particles.forEach((p, i) => {
-                if (p.alpha > 0) {
-                    p.update();
-                    p.draw();
-                } else {
-                    particles.splice(i, 1);
-                }
+                if (p.alpha > 0) { p.update(); p.draw(); } else { particles.splice(i, 1); }
             });
             requestAnimationFrame(animate);
         }
         animate();
-
-        // Launch fireworks automatically
-        setInterval(() => {
-            if (document.visibilityState === 'visible') {
-                createFirework(Math.random() * canvas.width, Math.random() * canvas.height * 0.7);
-            }
-        }, 1200);
+        setInterval(() => { if (document.visibilityState === 'visible') createFirework(Math.random()*canvas.width, Math.random()*canvas.height*0.5); }, 1500);
 
         // --- NAVIGATION ---
         const pageHistory = ['page-greeting', 'page-when', 'page-where', 'page-details'];
         let currentIndex = 0;
+
+        function showButton() {
+            const activePage = document.querySelector('.page.active');
+            const btn = activePage.querySelector('.hang-btn');
+            if (btn) {
+                btn.style.display = 'none';
+                setTimeout(() => { btn.style.display = 'inline-block'; }, 2000);
+            }
+        }
 
         function goToPage(pageId) {
             document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
             document.getElementById(pageId).classList.add('active');
             currentIndex = pageHistory.indexOf(pageId);
             document.getElementById('back-btn').style.display = (currentIndex === 0) ? 'none' : 'flex';
-            
-            // Celebration burst on page change
-            createFirework(window.innerWidth / 2, window.innerHeight / 2);
+            showButton();
+            createFirework(window.innerWidth/2, window.innerHeight/2);
         }
 
-        function goBack() {
-            if (currentIndex > 0) {
-                currentIndex--;
-                goToPage(pageHistory[currentIndex]);
-            }
-        }
+        function goBack() { if (currentIndex > 0) { currentIndex--; goToPage(pageHistory[currentIndex]); } }
+        
+        // Initial button delay for first page
+        window.onload = showButton;
     </script>
 </body>
 </html>
