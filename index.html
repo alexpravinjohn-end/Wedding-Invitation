@@ -1,240 +1,804 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Alex & Neha's Wedding</title>
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Poppins:wght@300;400;600&display=swap');
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Alex & Neha's Wedding</title>
+  <link href="https://fonts.googleapis.com/css2?family=Boogaloo&family=Playfair+Display:ital,wght@0,700;1,400&family=Nunito:wght@400;600;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --crimson: #E8003D;
+      --gold: #FFD700;
+      --cobalt: #0047AB;
+      --emerald: #00A86B;
+      --tangerine: #FF6B00;
+      --cream: #FFF8E7;
+      --deep: #1a0a2e;
+    }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body, html { font-family: 'Poppins', sans-serif; width: 100%; height: 100%; overflow: hidden; background: #fdfaf1; }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
 
-        /* --- THEME --- */
-        .main-container {
-            position: relative;
-            width: 100%; height: 100%;
-            background: linear-gradient(135deg, #f5e6d3 0%, #ffffff 50%, #e0c9a6 100%);
-            display: flex; justify-content: center; align-items: center;
-            z-index: 1;
-        }
+    body, html {
+      width: 100%; height: 100%;
+      overflow: hidden;
+      font-family: 'Nunito', sans-serif;
+      background: var(--deep);
+      cursor: default;
+    }
 
-        /* VINE WINDOW FRAME */
-        .main-container::before {
-            content: '';
-            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-            background-image: url('image_075a07.jpg'); 
-            background-size: 100% 100%;
-            z-index: 20; pointer-events: none;
-        }
+    /* ── CANVAS LAYERS ── */
+    #confetti-canvas {
+      position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+      pointer-events: none; z-index: 100;
+    }
 
-        #bloom-canvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 5; }
+    /* ── CARNIVAL STRIPE BG ── */
+    .carnival-bg {
+      position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+      background:
+        repeating-linear-gradient(
+          45deg,
+          transparent,
+          transparent 40px,
+          rgba(255,215,0,0.04) 40px,
+          rgba(255,215,0,0.04) 80px
+        );
+      animation: bgShift 8s linear infinite;
+      z-index: 0;
+    }
+    @keyframes bgShift { to { background-position: 200px 200px; } }
 
-        /* --- PAGES --- */
-        .page {
-            position: absolute; top: 0; left: 0; width: 100vw; height: 100vh;
-            display: flex; flex-direction: column; justify-content: center; align-items: center;
-            text-align: center; padding: 50px;
-            opacity: 0; visibility: hidden;
-            transition: opacity 0.8s ease; z-index: 10;
-        }
-        .page.active { opacity: 1; visibility: visible; }
+    /* ── LIGHT BULB STRING ── */
+    .bulb-string {
+      position: fixed; top: 0; left: 0; width: 100%;
+      height: 60px; z-index: 50; pointer-events: none;
+    }
+    .bulb-string svg { width: 100%; height: 60px; }
 
-        /* --- TEXT STYLES --- */
-        h1 { font-family: 'Dancing Script', cursive; font-size: clamp(3rem, 10vw, 4.5rem); color: #12372a; }
-        .huge-text { font-size: clamp(4.5rem, 13vw, 7rem); color: #12372a; font-weight: 800; margin: 10px 0; }
-        p { color: #436850; font-weight: 400; }
+    /* ── PAGES ── */
+    .page {
+      position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+      display: flex; flex-direction: column;
+      justify-content: center; align-items: center;
+      text-align: center; padding: 60px 30px 30px;
+      z-index: 10;
+      opacity: 0; visibility: hidden;
+      transform: scale(0.92) translateY(30px);
+      transition: opacity 0.6s cubic-bezier(0.34,1.56,0.64,1),
+                  transform 0.6s cubic-bezier(0.34,1.56,0.64,1),
+                  visibility 0s 0.6s;
+    }
+    .page.active {
+      opacity: 1; visibility: visible;
+      transform: scale(1) translateY(0);
+      transition: opacity 0.6s cubic-bezier(0.34,1.56,0.64,1),
+                  transform 0.6s cubic-bezier(0.34,1.56,0.64,1),
+                  visibility 0s 0s;
+    }
+    .page.exit-left {
+      opacity: 0;
+      transform: scale(0.88) translateX(-60px) rotate(-3deg);
+      transition: opacity 0.4s ease, transform 0.4s ease, visibility 0s 0.4s;
+    }
 
-        /* --- THE FIXED BUTTON --- */
-        .hang-btn {
-            background: linear-gradient(45deg, #12372a, #436850);
-            color: #fbfada; border: 1px solid #d4af37; padding: 16px 36px;
-            font-size: 1rem; font-weight: 600; border-radius: 8px;
-            cursor: pointer; margin-top: 40px; z-index: 25;
-            
-            /* CSS Animation handles the 1.5s delay automatically */
-            opacity: 0;
-            animation: fadeInBtn 0.8s ease forwards 1.5s, swing 3.5s ease-in-out infinite 2.3s;
-        }
+    /* ── MARQUEE BANNER ── */
+    .marquee-banner {
+      position: fixed; bottom: 0; left: 0; width: 100%;
+      background: var(--crimson);
+      border-top: 3px solid var(--gold);
+      padding: 8px 0; z-index: 60; overflow: hidden;
+    }
+    .marquee-track {
+      display: flex; gap: 0; white-space: nowrap;
+      animation: marquee 18s linear infinite;
+    }
+    .marquee-item {
+      font-family: 'Boogaloo', cursive;
+      font-size: 1rem; color: var(--gold);
+      padding: 0 30px; flex-shrink: 0;
+    }
+    .marquee-dot { color: #fff; padding: 0 6px; }
+    @keyframes marquee { from { transform: translateX(0); } to { transform: translateX(-50%); } }
 
-        @keyframes fadeInBtn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        @keyframes swing { 0%, 100% { transform: rotate(-2deg); } 50% { transform: rotate(2deg); } }
+    /* ── PAGE 1: COVER ── */
+    #page-1 { background: radial-gradient(ellipse at 50% 60%, #3d0066 0%, #1a0a2e 70%); }
 
-        /* --- COUPLE ANIMATION --- */
-        .face-circle {
-            width: clamp(110px, 25vw, 160px); height: clamp(110px, 25vw, 160px);
-            border-radius: 50%; border: 4px solid #d4af37;
-            background-size: cover; background-position: center; margin-bottom: 10px;
-        }
-        .face-alex { background-image: url('ALEX_Animated.png'); }
-        .face-neha { background-image: url('NEHA_Animated.png'); }
-        .couple-animation { display: flex; align-items: center; gap: 15px; margin-bottom: 20px; }
-        .heart { font-size: 2rem; color: #ff1744; animation: pulse 1.5s infinite; }
-        @keyframes pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.1); } }
+    .p1-arch {
+      position: absolute; top: 0; left: 50%; transform: translateX(-50%);
+      width: 340px; height: 200px;
+      background: radial-gradient(ellipse at 50% 0%, rgba(255,215,0,0.18) 0%, transparent 70%);
+      pointer-events: none;
+    }
 
-        /* --- DETAILS CARD --- */
-        .details-card {
-            background: rgba(255, 255, 255, 0.95);
-            padding: 30px; border-radius: 12px; border: 1px solid #d4af37;
-            max-width: 450px; width: 90%; text-align: left;
-            z-index: 25; max-height: 70vh;
-            overflow-y: scroll; scrollbar-width: none; -ms-overflow-style: none;
-        }
-        .details-card::-webkit-scrollbar { display: none; }
-        .detail-row { margin-bottom: 15px; padding-bottom: 10px; border-bottom: 1px solid #f2e8cf; }
-        .detail-row strong { color: #12372a; display: block; }
-        .map-link {
-            display: block; width: 100%; background: #12372a; color: #fbfada;
-            padding: 12px; border-radius: 6px; text-align: center; text-decoration: none;
-            margin-top: 10px; font-weight: 600; font-size: 0.9rem;
-        }
+    .star-field { position: absolute; inset: 0; overflow: hidden; pointer-events: none; }
+    .star {
+      position: absolute; background: #fff; border-radius: 50%;
+      animation: twinkle var(--d, 2s) ease-in-out infinite var(--delay, 0s);
+    }
+    @keyframes twinkle { 0%,100%{opacity:.2;transform:scale(1)} 50%{opacity:1;transform:scale(1.4)} }
 
-        /* --- CONTACT TAB --- */
-        .contact-tab {
-            position: absolute; bottom: 0; left: 0; width: 100%;
-            background: #12372a; color: #fbfada; padding: 15px; text-align: center;
-            border-top: 2px solid #d4af37; z-index: 30; cursor: pointer;
-            transition: transform 0.4s ease; transform: translateY(calc(100% - 48px));
-        }
-        .contact-tab.open { transform: translateY(0); }
-        .contact-handle { font-weight: 600; display: block; margin-bottom: 10px; color: #d4af37; }
-        .contact-content { display: none; padding: 10px 0; border-top: 1px solid rgba(212, 175, 55, 0.2); }
-        .contact-tab.open .contact-content { display: block; }
+    .couple-wrap {
+      display: flex; align-items: center; gap: 20px;
+      margin-bottom: 16px; animation: floatUp 0.8s ease 0.2s both;
+    }
+    .face-circle {
+      width: clamp(100px,22vw,140px); height: clamp(100px,22vw,140px);
+      border-radius: 50%;
+      border: 4px solid var(--gold);
+      background-size: cover; background-position: center;
+      box-shadow: 0 0 0 6px rgba(255,215,0,0.2), 0 0 30px rgba(255,215,0,0.3);
+      animation: portraitPulse 3s ease-in-out infinite;
+    }
+    @keyframes portraitPulse {
+      0%,100% { box-shadow: 0 0 0 6px rgba(255,215,0,0.2), 0 0 30px rgba(255,215,0,0.3); }
+      50% { box-shadow: 0 0 0 10px rgba(255,215,0,0.3), 0 0 50px rgba(255,215,0,0.5); }
+    }
+    .face-alex { background-image: url('ALEX_Animated.png'); background-color: #2a1a4e; }
+    .face-neha { background-image: url('NEHA_Animated.png'); background-color: #2a1a4e; }
 
-        #back-btn {
-            position: fixed; top: 35px; left: 35px; width: 45px; height: 45px;
-            border-radius: 50%; background: #12372a; color: #d4af37;
-            display: none; align-items: center; justify-content: center;
-            z-index: 1000; border: 2px solid #d4af37; cursor: pointer;
-        }
-    </style>
+    .face-label {
+      font-family: 'Boogaloo', cursive;
+      font-size: 1rem; color: var(--gold);
+      margin-top: 8px; letter-spacing: 2px;
+    }
+
+    .heart-connector {
+      display: flex; flex-direction: column; align-items: center; gap: 4px;
+    }
+    .heart-big {
+      font-size: 2.5rem;
+      animation: heartbeat 1.2s ease-in-out infinite;
+      filter: drop-shadow(0 0 12px #ff4488);
+    }
+    @keyframes heartbeat {
+      0%,100%{transform:scale(1)} 14%{transform:scale(1.2)} 28%{transform:scale(1)} 42%{transform:scale(1.15)} 70%{transform:scale(1)}
+    }
+
+    .p1-title {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(2rem, 8vw, 3.2rem);
+      color: var(--gold);
+      text-shadow: 0 0 30px rgba(255,215,0,0.6), 2px 2px 0 rgba(0,0,0,0.4);
+      letter-spacing: 2px;
+      margin-bottom: 6px;
+      animation: floatUp 0.8s ease 0.4s both;
+    }
+    .p1-sub {
+      font-family: 'Nunito', sans-serif;
+      font-size: 0.9rem; color: rgba(255,255,255,0.7);
+      letter-spacing: 4px; text-transform: uppercase;
+      margin-bottom: 28px;
+      animation: floatUp 0.8s ease 0.6s both;
+    }
+    @keyframes floatUp {
+      from { opacity: 0; transform: translateY(24px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ── PAGE 2: DATE ── */
+    #page-2 {
+      background: radial-gradient(ellipse at 30% 40%, #b80025 0%, #6b0000 40%, #1a0a2e 100%);
+    }
+    .ticket-card {
+      background: var(--cream);
+      border-radius: 20px;
+      padding: 0;
+      width: min(420px, 92vw);
+      overflow: hidden;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.5), 0 0 0 4px var(--gold);
+      animation: ticketIn 0.7s cubic-bezier(0.34,1.56,0.64,1) 0.1s both;
+      position: relative;
+    }
+    @keyframes ticketIn {
+      from { transform: perspective(600px) rotateX(20deg) scale(0.8); opacity: 0; }
+      to   { transform: perspective(600px) rotateX(0deg) scale(1); opacity: 1; }
+    }
+    .ticket-header {
+      background: var(--crimson);
+      padding: 18px 24px;
+      display: flex; align-items: center; justify-content: center; gap: 10px;
+    }
+    .ticket-header-text {
+      font-family: 'Boogaloo', cursive;
+      font-size: 1.1rem; color: var(--gold);
+      letter-spacing: 3px;
+    }
+    .ticket-stars { font-size: 1.2rem; }
+    .ticket-body { padding: 24px; text-align: center; display: flex; flex-direction: column; align-items: center; }
+    .ticket-date-huge {
+      font-family: 'Boogaloo', cursive;
+      font-size: clamp(4rem, 18vw, 6.5rem);
+      color: var(--crimson);
+      line-height: 1;
+      text-shadow: 3px 3px 0 rgba(232,0,61,0.2);
+    }
+    .ticket-month {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.8rem; color: var(--cobalt);
+      margin-top: -6px; margin-bottom: 4px;
+    }
+    .ticket-year {
+      font-family: 'Nunito', sans-serif;
+      font-size: 1rem; color: #888; letter-spacing: 4px;
+    }
+    .ticket-tear {
+      border-top: 3px dashed rgba(0,0,0,0.12);
+      margin: 16px 0;
+      position: relative;
+    }
+    .ticket-tear::before, .ticket-tear::after {
+      content: ''; position: absolute; top: -14px;
+      width: 24px; height: 24px; border-radius: 50%;
+      background: #1a0a2e;
+    }
+    .ticket-tear::before { left: -12px; }
+    .ticket-tear::after { right: -12px; }
+    .ticket-footer {
+      font-family: 'Boogaloo', cursive;
+      font-size: 0.85rem; color: #aaa;
+      letter-spacing: 2px;
+    }
+
+    /* ── PAGE 3: PLACE ── */
+    #page-3 {
+      background: radial-gradient(ellipse at 70% 60%, #004d99 0%, #001a40 60%, #1a0a2e 100%);
+    }
+    .location-badge {
+      position: relative;
+      background: var(--cream);
+      border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+      padding: 36px 50px 48px;
+      text-align: center;
+      box-shadow: 0 16px 50px rgba(0,0,0,0.5), 0 0 0 4px var(--gold), inset 0 -4px 0 rgba(0,0,0,0.1);
+      animation: badgeBounce 0.7s cubic-bezier(0.34,1.56,0.64,1) 0.2s both;
+      max-width: 320px; width: 90%;
+    }
+    @keyframes badgeBounce {
+      from { transform: scale(0.3) rotate(-15deg); opacity: 0; }
+      to   { transform: scale(1) rotate(0deg); opacity: 1; }
+    }
+    .location-badge::after {
+      content: '📍';
+      position: absolute; bottom: -24px; left: 50%; transform: translateX(-50%);
+      font-size: 2.5rem;
+      filter: drop-shadow(0 4px 8px rgba(0,0,0,0.4));
+      animation: pinBounce 2s ease-in-out infinite;
+    }
+    @keyframes pinBounce { 0%,100%{transform:translateX(-50%) translateY(0)} 50%{transform:translateX(-50%) translateY(-6px)} }
+    .location-pre {
+      font-family: 'Boogaloo', cursive;
+      font-size: 0.85rem; color: var(--crimson);
+      letter-spacing: 4px; margin-bottom: 8px;
+    }
+    .location-city {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(2rem,10vw,3rem);
+      color: var(--deep); line-height: 1.1;
+    }
+    .location-state {
+      font-family: 'Nunito', sans-serif;
+      font-size: 0.95rem; color: #666;
+      letter-spacing: 2px; margin-top: 4px;
+    }
+    .flag-row { font-size: 1.5rem; margin-top: 10px; }
+
+    /* ── PAGE 4: DETAILS ── */
+    #page-4 {
+      background: radial-gradient(ellipse at 60% 30%, #005c30 0%, #002010 60%, #1a0a2e 100%);
+      padding-bottom: 60px;
+      justify-content: flex-start;
+      padding-top: 80px;
+    }
+    .details-grid {
+      display: flex; flex-direction: column; gap: 10px;
+      width: min(440px, 92vw); max-height: calc(100vh - 140px);
+      overflow-y: auto; scrollbar-width: none; -ms-overflow-style: none;
+    }
+    .details-grid::-webkit-scrollbar { display: none; }
+
+    .d-card {
+      background: rgba(255,255,255,0.06);
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(255,215,0,0.25);
+      border-radius: 16px; padding: 14px 16px 14px 22px;
+      text-align: left;
+      animation: cardSlide 0.5s ease calc(var(--i,0) * 0.1s) both;
+      position: relative; overflow: hidden;
+      display: flex; align-items: center; justify-content: space-between; gap: 12px;
+    }
+    .d-card::before {
+      content: ''; position: absolute; top: 0; left: 0;
+      width: 5px; height: 100%;
+      background: var(--accent, var(--gold));
+      border-radius: 16px 0 0 16px;
+    }
+    .d-card-inner { flex: 1; min-width: 0; }
+    @keyframes cardSlide {
+      from { transform: translateX(-30px); opacity: 0; }
+      to   { transform: translateX(0); opacity: 1; }
+    }
+    .d-card-label {
+      font-family: 'Boogaloo', cursive;
+      font-size: 0.72rem; color: var(--accent, var(--gold));
+      letter-spacing: 3px; text-transform: uppercase; margin-bottom: 3px;
+    }
+    .d-card-value {
+      font-family: 'Playfair Display', serif;
+      font-size: 1rem; color: var(--cream); line-height: 1.3;
+    }
+    .d-card-sub {
+      font-family: 'Nunito', sans-serif;
+      font-size: 0.78rem; color: rgba(255,255,255,0.5); margin-top: 2px;
+    }
+    .map-icon-btn {
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+      width: 42px; height: 42px; border-radius: 50%;
+      background: var(--accent, var(--gold));
+      font-size: 1.2rem;
+      text-decoration: none;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .map-icon-btn:active { transform: scale(0.9); }
+
+    /* ── CONTACT DRAWER ── */
+    .contact-drawer {
+      position: fixed; bottom: 34px; left: 0; width: 100%;
+      z-index: 70;
+      transform: translateY(calc(100% - 46px));
+      transition: transform 0.4s cubic-bezier(0.34,1.2,0.64,1);
+    }
+    .contact-drawer.open { transform: translateY(0); }
+    .drawer-handle {
+      background: var(--gold);
+      display: flex; align-items: center; justify-content: center; gap: 8px;
+      padding: 12px; cursor: pointer; user-select: none;
+      font-family: 'Boogaloo', cursive;
+      font-size: 1rem; color: var(--deep);
+      letter-spacing: 2px;
+      border-radius: 14px 14px 0 0;
+      box-shadow: 0 -4px 20px rgba(255,215,0,0.3);
+    }
+    .drawer-arrow { transition: transform 0.4s; display: inline-block; }
+    .contact-drawer.open .drawer-arrow { transform: rotate(180deg); }
+    .drawer-body {
+      background: var(--deep);
+      border-top: 2px solid var(--gold);
+      padding: 20px 24px;
+      display: flex; flex-wrap: wrap; gap: 12px; justify-content: center;
+    }
+    .contact-pill {
+      background: rgba(255,215,0,0.1);
+      border: 1px solid rgba(255,215,0,0.3);
+      border-radius: 30px; padding: 10px 20px;
+      text-align: center;
+    }
+    .contact-pill-name {
+      font-family: 'Boogaloo', cursive;
+      font-size: 0.85rem; color: var(--gold); letter-spacing: 1px;
+    }
+    .contact-pill-num {
+      font-size: 0.95rem; color: var(--cream); margin-top: 2px;
+      font-weight: 600;
+    }
+
+    /* ── BACK BUTTON ── */
+    #back-btn {
+      position: fixed; top: 16px; left: 16px;
+      width: 44px; height: 44px; border-radius: 50%;
+      background: var(--gold); color: var(--deep);
+      display: none; align-items: center; justify-content: center;
+      z-index: 200; border: none; cursor: pointer;
+      font-size: 1.3rem; font-weight: 800;
+      box-shadow: 0 4px 16px rgba(255,215,0,0.4);
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    #back-btn:hover { transform: scale(1.1); }
+    #back-btn.visible { display: flex; }
+
+    /* ── CARNIVAL BUTTON ── */
+    .hang-btn {
+      position: relative;
+      font-family: 'Boogaloo', cursive;
+      font-size: 1.15rem; letter-spacing: 2px;
+      color: var(--deep);
+      background: linear-gradient(135deg, var(--gold) 0%, #ffb300 50%, var(--gold) 100%);
+      background-size: 200% 200%;
+      border: none; border-radius: 50px;
+      padding: 16px 40px;
+      cursor: pointer; margin-top: 28px;
+      box-shadow:
+        0 6px 0 #b8860b,
+        0 10px 20px rgba(0,0,0,0.3),
+        inset 0 1px 0 rgba(255,255,255,0.4);
+      transform: translateY(0);
+      transition: transform 0.1s, box-shadow 0.1s, background-position 0.4s;
+      animation: btnAppear 0.6s cubic-bezier(0.34,1.56,0.64,1) 0.5s both,
+                 shimmer 3s ease-in-out 1.5s infinite;
+      overflow: hidden;
+    }
+    .hang-btn::before {
+      content: '';
+      position: absolute; top: -50%; left: -60%;
+      width: 30%; height: 200%;
+      background: rgba(255,255,255,0.35);
+      transform: skewX(-20deg);
+      animation: btnShine 3s ease-in-out 1.5s infinite;
+    }
+    @keyframes btnShine {
+      0%,85%,100% { left: -60%; }
+      40%          { left: 130%; }
+    }
+    @keyframes btnAppear {
+      from { opacity: 0; transform: scale(0.5) translateY(20px); }
+      to   { opacity: 1; transform: scale(1) translateY(0); }
+    }
+    @keyframes shimmer {
+      0%,100%{ background-position: 0% 50%; }
+      50%     { background-position: 100% 50%; }
+    }
+    .hang-btn:active {
+      transform: translateY(4px);
+      box-shadow: 0 2px 0 #b8860b, 0 4px 10px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.4);
+    }
+
+    /* ── DECORATIVE PENNANTS ── */
+    .pennants {
+      position: fixed; top: 58px; left: 0; width: 100%;
+      pointer-events: none; z-index: 40; overflow: hidden; height: 50px;
+    }
+    .pennant {
+      position: absolute; top: 0;
+      width: 0; height: 0;
+      border-left: 14px solid transparent;
+      border-right: 14px solid transparent;
+      border-top: 32px solid var(--c);
+      animation: pennantSwing 2s ease-in-out infinite;
+      animation-delay: var(--delay, 0s);
+    }
+    @keyframes pennantSwing {
+      0%,100%{transform:rotate(-4deg)} 50%{transform:rotate(4deg)}
+    }
+
+    /* ── PAGE NUMBER DOTS ── */
+    .page-dots {
+      position: fixed; top: 18px; left: 50%; transform: translateX(-50%);
+      display: flex; gap: 8px; z-index: 200;
+    }
+    .dot {
+      width: 8px; height: 8px; border-radius: 50%;
+      background: rgba(255,255,255,0.25);
+      transition: background 0.3s, transform 0.3s;
+    }
+    .dot.active { background: var(--gold); transform: scale(1.4); }
+
+    /* ── FIREWORK burst on transition ── */
+    .burst {
+      position: fixed; pointer-events: none; z-index: 150;
+      animation: burstAnim 0.6s ease-out forwards;
+    }
+    @keyframes burstAnim {
+      0%   { transform: scale(0); opacity: 1; }
+      100% { transform: scale(4); opacity: 0; }
+    }
+  </style>
 </head>
 <body>
 
-    <div class="main-container">
-        <canvas id="bloom-canvas"></canvas>
-        <div id="back-btn" onclick="goBack()">←</div>
+<canvas id="confetti-canvas"></canvas>
 
-        <section id="page-1" class="page active">
-            <h1>Celestial Union</h1>
-            <div class="couple-animation">
-                <div><div class="face-circle face-alex"></div><p style="font-weight:600">Alex</p></div>
-                <div class="heart">❤️</div>
-                <div><div class="face-circle face-neha"></div><p style="font-weight:600">Neha</p></div>
-            </div>
-            <p>INVITE YOU TO THEIR BIG DAY</p>
-            <button class="hang-btn" onclick="goToPage('page-2')">The Date 📅</button>
-        </section>
+<!-- Carnival stripes -->
+<div class="carnival-bg"></div>
 
-        <section id="page-2" class="page">
-            <p style="letter-spacing: 4px;">SAVE THE DAY</p>
-            <h1 class="huge-text">MAY 24</h1>
-            <p style="font-size: 1.5rem;">2026</p>
-            <button class="hang-btn" onclick="goToPage('page-3')">The Place 📍</button>
-        </section>
+<!-- Light bulb string SVG -->
+<div class="bulb-string">
+  <svg viewBox="0 0 400 60" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <radialGradient id="bg1" cx="50%" cy="50%" r="50%">
+        <stop offset="0%" stop-color="#FFD700" stop-opacity="0.9"/>
+        <stop offset="100%" stop-color="#FF6B00" stop-opacity="0.6"/>
+      </radialGradient>
+    </defs>
+    <path d="M0,10 Q50,28 100,10 Q150,28 200,10 Q250,28 300,10 Q350,28 400,10" stroke="#555" stroke-width="1.5" fill="none"/>
+    <g id="bulbs"></g>
+  </svg>
+</div>
 
-        <section id="page-3" class="page">
-            <p style="letter-spacing: 2px;">HOSTED AT</p>
-            <h1>Dindigul</h1>
-            <p>Tamil Nadu, India</p>
-            <button class="hang-btn" onclick="goToPage('page-4')">Full Details ✨</button>
-        </section>
+<!-- Pennants -->
+<div class="pennants" id="pennants"></div>
 
-        <section id="page-4" class="page">
-            <div class="details-card">
-                <h2 style="text-align:center; color:#12372a; margin-bottom:20px; font-family:'Dancing Script'; font-size: 2rem;">Wedding Schedule</h2>
-                <div class="detail-row"><strong>L Alex Pravin</strong><p style="font-size:0.8rem">Son of A Leo John & S Louis Carolin Mary</p></div>
-                <div class="detail-row"><strong>J Neha Lincy</strong><p style="font-size:0.8rem">Daughter of V James & Suguma</p></div>
-                <div class="detail-row">
-                    <strong>Ceremony @ 10:00 AM</strong>
-                    <a class="map-link" href="https://maps.app.goo.gl/church" target="_blank">View Church</a>
-                </div>
-                <div class="detail-row" style="border-bottom:none">
-                    <strong>Reception @ 12:00 PM</strong>
-                    <a class="map-link" href="https://maps.app.goo.gl/venue" target="_blank">View Venue</a>
-                </div>
-            </div>
+<!-- Page dots -->
+<div class="page-dots">
+  <div class="dot active" data-page="0"></div>
+  <div class="dot" data-page="1"></div>
+  <div class="dot" data-page="2"></div>
+  <div class="dot" data-page="3"></div>
+</div>
 
-            <div class="contact-tab" id="contact-tab" onclick="toggleContact()">
-                <span class="contact-handle">CONTACT INFO</span>
-                <div class="contact-content">
-                    <p>Leo John: +91 98765 43210</p>
-                    <p style="margin-top:10px">James: +91 91234 56789</p>
-                </div>
-            </div>
-        </section>
+<!-- Back button -->
+<button id="back-btn" onclick="goBack()">←</button>
+
+<!-- PAGE 1 -->
+<section id="page-1" class="page active">
+  <div class="star-field" id="stars"></div>
+  <div class="p1-arch"></div>
+  <div class="couple-wrap">
+    <div>
+      <div class="face-circle face-alex"></div>
+      <div class="face-label">ALEX</div>
     </div>
+    <div class="heart-connector">
+      <div class="heart-big">💕</div>
+    </div>
+    <div>
+      <div class="face-circle face-neha"></div>
+      <div class="face-label">NEHA</div>
+    </div>
+  </div>
+  <h1 class="p1-title">Alex & Neha</h1>
+  <p class="p1-sub">✨ invite you to celebrate ✨</p>
+  <button class="hang-btn" onclick="goToPage(1)">See The Date 🎪</button>
+</section>
 
-    <script>
-        const canvas = document.getElementById('bloom-canvas');
-        const ctx = canvas.getContext('2d');
-        let flowers = [];
+<!-- PAGE 2 -->
+<section id="page-2" class="page">
+  <div class="ticket-card">
+    <div class="ticket-header">
+      <span class="ticket-header-text">★ SAVE THE DATE ★</span>
+      <span class="ticket-stars">🎉</span>
+    </div>
+    <div class="ticket-body">
+      <div class="ticket-date-huge">24</div>
+      <div class="ticket-month">May</div>
+      <div class="ticket-year">2 0 2 6</div>
+      <div class="ticket-tear"></div>
+      <div class="ticket-footer">ONE GLORIOUS DAY · ONE LOVE STORY</div>
+    </div>
+  </div>
+  <button class="hang-btn" onclick="goToPage(2)">The Venue 📍</button>
+</section>
 
-        function resize() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
-        window.addEventListener('resize', resize); resize();
+<!-- PAGE 3 -->
+<section id="page-3" class="page">
+  <div class="location-badge">
+    <div class="location-pre">WE'RE GETTING HITCHED IN</div>
+    <div class="location-city">Dindigul</div>
+    <div class="location-state">Tamil Nadu, India</div>
+    <div class="flag-row">🪔 🌸 🪔</div>
+  </div>
+  <button class="hang-btn" onclick="goToPage(3)" style="margin-top: 52px;">Full Details ✨</button>
+</section>
 
-        class FlowerParticle {
-            constructor(x, y, color) {
-                this.x = x; this.y = y; this.color = color;
-                const angle = Math.random() * Math.PI * 2;
-                const force = Math.random() * 2 + 0.5;
-                this.velocity = { x: Math.cos(angle) * force, y: Math.sin(angle) * force };
-                this.alpha = 1; this.decay = Math.random() * 0.01 + 0.005;
-                this.size = Math.random() * 2 + 1;
-            }
-            draw() {
-                ctx.globalAlpha = this.alpha; ctx.fillStyle = this.color;
-                ctx.beginPath(); ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2); ctx.fill();
-            }
-            update() { this.x += this.velocity.x; this.y += this.velocity.y; this.alpha -= this.decay; }
-        }
+<!-- PAGE 4 -->
+<section id="page-4" class="page">
+  <div class="details-grid">
+    <div class="d-card" style="--i:0; --accent:#FFD700;">
+      <div class="d-card-inner">
+        <div class="d-card-label">🎊 The Groom</div>
+        <div class="d-card-value">L Alex Pravin</div>
+        <div class="d-card-sub">Son of A Leo John & S Louis Carolin Mary</div>
+      </div>
+    </div>
+    <div class="d-card" style="--i:1; --accent:#FF6B00;">
+      <div class="d-card-inner">
+        <div class="d-card-label">💐 The Bride</div>
+        <div class="d-card-value">J Neha Lincy</div>
+        <div class="d-card-sub">Daughter of V James & Suguma</div>
+      </div>
+    </div>
+    <div class="d-card" style="--i:2; --accent:#FF1493; border-color:rgba(255,20,147,0.4); background:rgba(255,20,147,0.12);">
+      <div class="d-card-inner">
+        <div class="d-card-label" style="color:#FF69B4;">⛪ Ceremony</div>
+        <div class="d-card-value" style="color:#fff; font-size:1.1rem;">10:00 AM</div>
+        <div class="d-card-sub">May 24, 2026 · Church, Dindigul</div>
+      </div>
+      <a class="map-icon-btn" style="background:#FF1493;" href="https://www.google.com/maps/search/?api=1&query=church+dindigul+tamil+nadu" target="_blank">📍</a>
+    </div>
+    <div class="d-card" style="--i:3; --accent:#00E676; border-color:rgba(0,230,118,0.35); background:rgba(0,200,100,0.12);">
+      <div class="d-card-inner">
+        <div class="d-card-label" style="color:#00E676;">🥂 Reception</div>
+        <div class="d-card-value" style="color:#fff; font-size:1.1rem;">12:00 PM</div>
+        <div class="d-card-sub">Lunch & Celebrations · Dindigul</div>
+      </div>
+      <a class="map-icon-btn" style="background:#00C864;" href="https://www.google.com/maps/search/?api=1&query=reception+venue+dindigul+tamil+nadu" target="_blank">📍</a>
+    </div>
+  </div>
+</section>
 
-        function triggerBloom(x, y) {
-            const colors = ['#d4af37', '#f2e8cf', '#ffffff', '#436850'];
-            for (let i = 0; i < 15; i++) flowers.push(new FlowerParticle(x, y, colors[Math.floor(Math.random() * colors.length)]));
-        }
+<!-- Marquee -->
+<div class="marquee-banner">
+  <div class="marquee-track" id="marquee-track"></div>
+</div>
 
-        function animate() {
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            flowers.forEach((f, i) => { if (f.alpha > 0) { f.update(); f.draw(); } else { flowers.splice(i, 1); } });
-            requestAnimationFrame(animate);
-        }
-        animate();
+<!-- Contact Drawer (page 4 only) -->
+<div class="contact-drawer" id="contact-drawer">
+  <div class="drawer-handle" onclick="toggleDrawer()">
+    📞 CONTACT INFO <span class="drawer-arrow">▲</span>
+  </div>
+  <div class="drawer-body">
+    <div class="contact-pill">
+      <div class="contact-pill-name">Leo John (Groom's Father)</div>
+      <div class="contact-pill-num">+91 91501 06035</div>
+    </div>
+    <div class="contact-pill">
+      <div class="contact-pill-name">James (Bride's Father)</div>
+      <div class="contact-pill-num">+91 63826 40258</div>
+    </div>
+  </div>
+</div>
 
-        const pageHistory = ['page-1', 'page-2', 'page-3', 'page-4'];
-        let currentIndex = 0;
+<script>
+  /* ── MARQUEE ── */
+  const items = ['Alex & Neha', 'May 24 · 2026', 'Dindigul', 'Tamil Nadu', '❤️', 'You\'re Invited', '🎊', 'Celestial Union', '🌸'];
+  const track = document.getElementById('marquee-track');
+  const html = items.map(i => `<span class="marquee-item">${i} <span class="marquee-dot">◆</span></span>`).join('');
+  track.innerHTML = html + html; // duplicate for seamless loop
 
-        function goToPage(pageId) {
-            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-            const next = document.getElementById(pageId);
-            next.classList.add('active');
-            
-            // Reset the button animation so it reappears on the new page
-            const btn = next.querySelector('.hang-btn');
-            if(btn) {
-                btn.style.animation = 'none';
-                btn.offsetHeight; /* trigger reflow */
-                btn.style.animation = null; 
-            }
+  /* ── PENNANTS ── */
+  const colors = ['#E8003D','#FFD700','#0047AB','#00A86B','#FF6B00','#9B00E8','#FF1493'];
+  const pennantContainer = document.getElementById('pennants');
+  for (let i = 0; i < 18; i++) {
+    const p = document.createElement('div');
+    p.className = 'pennant';
+    p.style.cssText = `left:${(i/17)*100}%; --c:${colors[i%colors.length]}; --delay:${(i*0.18).toFixed(2)}s`;
+    pennantContainer.appendChild(p);
+  }
 
-            currentIndex = pageHistory.indexOf(pageId);
-            document.getElementById('back-btn').style.display = (currentIndex === 0) ? 'none' : 'flex';
-            triggerBloom(window.innerWidth / 2, window.innerHeight / 2);
-        }
+  /* ── BULBS ── */
+  const bulbG = document.getElementById('bulbs');
+  const bulbColors = ['#FFD700','#FF4444','#4488FF','#44FF88','#FF88FF'];
+  for (let i = 0; i < 9; i++) {
+    const x = (i / 8) * 400;
+    const y = 10 + 18 * Math.sin(i * Math.PI / 8);
+    const c = bulbColors[i % bulbColors.length];
+    bulbG.innerHTML += `
+      <ellipse cx="${x}" cy="${y}" rx="7" ry="9" fill="${c}" opacity="0.9">
+        <animate attributeName="opacity" values="0.9;0.4;0.9" dur="${1+i*0.3}s" repeatCount="indefinite"/>
+      </ellipse>
+      <line x1="${x}" y1="${y-9}" x2="${x}" y2="0" stroke="#555" stroke-width="1"/>
+    `;
+  }
 
-        function goBack() { if (currentIndex > 0) { currentIndex--; goToPage(pageHistory[currentIndex]); } }
-        function toggleContact() { document.getElementById('contact-tab').classList.toggle('open'); }
+  /* ── STARS ── */
+  const starContainer = document.getElementById('stars');
+  for (let i = 0; i < 60; i++) {
+    const s = document.createElement('div');
+    s.className = 'star';
+    const size = Math.random() * 2.5 + 0.5;
+    s.style.cssText = `
+      width:${size}px; height:${size}px;
+      left:${Math.random()*100}%; top:${Math.random()*100}%;
+      --d:${(Math.random()*2+1.5).toFixed(1)}s;
+      --delay:${(Math.random()*3).toFixed(1)}s;
+    `;
+    starContainer.appendChild(s);
+  }
 
-        window.onload = () => {
-            setInterval(() => {
-                if (document.visibilityState === 'visible' && flowers.length < 30) {
-                    triggerBloom(Math.random() * window.innerWidth, Math.random() * window.innerHeight * 0.4);
-                }
-            }, 3000);
-        };
-    </script>
+  /* ── CONFETTI ENGINE ── */
+  const canvas = document.getElementById('confetti-canvas');
+  const ctx = canvas.getContext('2d');
+  let W, H, particles = [];
+
+  function resize() { W = canvas.width = innerWidth; H = canvas.height = innerHeight; }
+  window.addEventListener('resize', resize); resize();
+
+  const confettiColors = ['#E8003D','#FFD700','#0047AB','#00A86B','#FF6B00','#FF69B4','#9B00E8'];
+
+  class Particle {
+    constructor(x, y, burst) {
+      this.x = x; this.y = y; this.burst = burst;
+      const a = Math.random() * Math.PI * 2;
+      const speed = burst ? Math.random() * 8 + 4 : Math.random() * 1.5 + 0.5;
+      this.vx = Math.cos(a) * speed;
+      this.vy = burst ? Math.sin(a) * speed - 4 : Math.random() * -1 - 0.5;
+      this.color = confettiColors[Math.floor(Math.random() * confettiColors.length)];
+      this.size = Math.random() * 8 + 4;
+      this.shape = Math.random() > 0.5 ? 'rect' : 'circle';
+      this.rotation = Math.random() * Math.PI * 2;
+      this.rotationSpeed = (Math.random() - 0.5) * 0.15;
+      this.alpha = 1;
+      this.gravity = 0.12;
+      this.drag = 0.99;
+    }
+    update() {
+      this.x += this.vx; this.y += this.vy;
+      this.vy += this.gravity; this.vx *= this.drag;
+      this.rotation += this.rotationSpeed;
+      this.alpha -= this.burst ? 0.018 : 0.006;
+    }
+    draw() {
+      ctx.save(); ctx.globalAlpha = Math.max(0, this.alpha);
+      ctx.fillStyle = this.color;
+      ctx.translate(this.x, this.y); ctx.rotate(this.rotation);
+      if (this.shape === 'rect') {
+        ctx.fillRect(-this.size/2, -this.size/4, this.size, this.size/2);
+      } else {
+        ctx.beginPath(); ctx.arc(0, 0, this.size/2, 0, Math.PI*2); ctx.fill();
+      }
+      ctx.restore();
+    }
+  }
+
+  function spawnConfetti(count, x, y, burst) {
+    for (let i = 0; i < count; i++) particles.push(new Particle(x, y, burst));
+  }
+
+  function animate() {
+    ctx.clearRect(0, 0, W, H);
+    particles = particles.filter(p => p.alpha > 0);
+    particles.forEach(p => { p.update(); p.draw(); });
+    requestAnimationFrame(animate);
+  }
+  animate();
+
+  /* ── AMBIENT confetti (page 1) ── */
+  let ambientTimer;
+  function startAmbient() {
+    ambientTimer = setInterval(() => {
+      if (currentPage === 0) spawnConfetti(4, Math.random() * W, -10, false);
+    }, 400);
+  }
+  startAmbient();
+
+  /* ── PAGE NAVIGATION ── */
+  const pages = ['page-1','page-2','page-3','page-4'];
+  const dots = document.querySelectorAll('.dot');
+  let currentPage = 0;
+  let transitioning = false;
+
+  function goToPage(idx) {
+    if (transitioning || idx === currentPage) return;
+    transitioning = true;
+
+    // Burst confetti at center
+    spawnConfetti(60, W/2, H/2, true);
+
+    const oldEl = document.getElementById(pages[currentPage]);
+    const newEl = document.getElementById(pages[idx]);
+
+    oldEl.classList.add('exit-left');
+    setTimeout(() => {
+      oldEl.classList.remove('active','exit-left');
+      newEl.classList.add('active');
+      currentPage = idx;
+      updateUI();
+      transitioning = false;
+    }, 420);
+
+    // Reset button anim on new page
+    setTimeout(() => {
+      const btn = newEl.querySelector('.hang-btn');
+      if (btn) {
+        btn.style.animation = 'none';
+        btn.offsetHeight;
+        btn.style.animation = '';
+      }
+    }, 500);
+  }
+
+  function goBack() {
+    if (currentPage > 0) goToPage(currentPage - 1);
+  }
+
+  function updateUI() {
+    dots.forEach((d, i) => d.classList.toggle('active', i === currentPage));
+    const backBtn = document.getElementById('back-btn');
+    backBtn.classList.toggle('visible', currentPage > 0);
+    const drawer = document.getElementById('contact-drawer');
+    drawer.style.display = currentPage === 3 ? '' : 'none';
+    if (currentPage !== 3) drawer.classList.remove('open');
+  }
+
+  function toggleDrawer() {
+    document.getElementById('contact-drawer').classList.toggle('open');
+  }
+
+  // Dot click nav
+  dots.forEach(d => d.addEventListener('click', () => goToPage(+d.dataset.page)));
+
+  // Initial UI state
+  updateUI();
+</script>
 </body>
 </html>
