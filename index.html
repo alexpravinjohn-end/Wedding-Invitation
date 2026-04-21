@@ -3,22 +3,16 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Alex &amp; Neha — Wedding Invitation</title>
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">
-  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='5' fill='%231C3554'/><rect x='1.5' y='1.5' width='29' height='29' rx='4' fill='none' stroke='%23C9A46E' stroke-width='1'/><text x='16' y='23' text-anchor='middle' font-family='Georgia,serif' font-style='italic' font-weight='400' font-size='14' fill='%23E8C98A'>A%26N</text></svg>">
+  <title>Alex & Neha — Wedding Invitation</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Lobster+Two:ital,wght@1,700&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">
   <style>
     :root {
-      --navy:  #1C3554;
-      --navy2: #1F3D62;
+      --navy:  #0a1d16; /* Deep Emerald/Navy Hybrid */
       --gold:  #C9A46E;
       --gsub:  rgba(201,164,110,0.30);
-      --gsh:   #E8C98A;
       --cream: #EDE0CF;
-      --blush: #C17B8A;
-      --steel: #7BAFD4;
-      --sage:  #90B99A;
-      --muted: rgba(237,224,207,0.72);
       --soft:  rgba(237,224,207,0.84);
+      --muted: rgba(237,224,207,0.72);
     }
 
     *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
@@ -32,52 +26,14 @@
       overscroll-behavior: none;
     }
 
-
-    /* ── AMBIENT BACKGROUND ── */
-    .bg { position: fixed; inset: 0; z-index: 0;
-      background:
-        radial-gradient(ellipse at 20% 75%, rgba(193,123,138,0.07) 0%, transparent 55%),
-        radial-gradient(ellipse at 80% 20%, rgba(201,164,110,0.07) 0%, transparent 55%),
-        #1C3554;
+    .bg { 
+        position: fixed; inset: 0; z-index: 0;
+        background: radial-gradient(circle at center, #12372a 0%, #0a1d16 100%);
     }
+
     #petal-canvas { position: fixed; inset: 0; pointer-events: none; z-index: 100; }
 
-    /* ── PAGES ── */
-    .page {
-      position: fixed; inset: 0;
-      display: flex; flex-direction: column;
-      align-items: center; justify-content: center;
-      text-align: center; padding: 68px 28px 72px; z-index: 10;
-      opacity: 0; visibility: hidden;
-      pointer-events: none;
-      transform: translateX(52px);
-      transition: opacity .55s ease, transform .55s ease, visibility 0s .55s;
-    }
-    .page.active {
-      opacity: 1; visibility: visible;
-      pointer-events: auto;
-      transform: translateX(0);
-      transition: opacity .55s ease, transform .55s ease, visibility 0s 0s;
-    }
-    .page.active.from-right { opacity: 0; transform: translateX(56px); }
-    .page.active.from-left  { opacity: 0; transform: translateX(-56px); }
-    .page.leaving-left  { opacity: 0; transform: translateX(-56px); }
-    .page.leaving-right { opacity: 0; transform: translateX(56px); }
-
-    @media (max-width: 520px) {
-      .page,
-      .page.active.from-right,
-      .page.active.from-left,
-      .page.leaving-left,
-      .page.leaving-right {
-        transform: translateX(36px);
-      }
-      .page.active.from-left,
-      .page.leaving-left { transform: translateX(-36px); }
-      .page.active { transform: translateX(0); }
-    }
-
-    /* ── NAV DOTS ── */
+    /* ── NAVIGATION ── */
     .page-dots {
       position: fixed; top: 22px; left: 50%; transform: translateX(-50%);
       display: flex; align-items: center; gap: 8px; z-index: 200;
@@ -89,562 +45,80 @@
     }
     .dot.active { width: 22px; background: var(--gold); }
 
-    /* ── BACK BUTTON ── */
     #back-btn {
       position: fixed; top: 14px; left: 18px;
       width: 36px; height: 36px; border-radius: 50%;
-      border: 1px solid var(--gsub); background: transparent;
-      color: var(--gold); display: none; align-items: center;
-      justify-content: center; z-index: 200; cursor: pointer;
-      font-size: 0.95rem; transition: background .2s;
+      border: 1px solid var(--gsub); color: var(--gold); 
+      display: none; align-items: center; justify-content: center; 
+      z-index: 200; cursor: pointer;
     }
     #back-btn.visible { display: flex; }
-    #back-btn:active { background: rgba(201,164,110,0.1); }
 
-    /* ── SHARED ── */
-    .gold-line {
-      width: 52px; height: 1px;
-      background: linear-gradient(90deg, transparent, var(--gold), transparent);
-      margin: 13px auto;
+    /* ── PAGE TRANSITIONS ── */
+    .page {
+      position: fixed; inset: 0;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      text-align: center; padding: 68px 28px; z-index: 10;
+      opacity: 0; visibility: hidden;
+      transform: translateX(40px);
+      transition: opacity .5s ease, transform .5s ease;
     }
-    .ornament { font-size: .75rem; color: var(--gold); opacity: .6; letter-spacing: 8px; }
+    .page.active {
+      opacity: 1; visibility: visible;
+      transform: translateX(0);
+    }
 
-    /* ── BUTTON ── */
+    /* ── BUTTON STYLE ── */
     .btn {
       font-family: 'Montserrat', sans-serif;
-      font-size: 0.62rem; font-weight: 600; letter-spacing: 4px; text-transform: uppercase;
+      font-size: 0.65rem; font-weight: 600; letter-spacing: 3px;
       color: var(--gold); background: transparent;
-      border: 1px solid var(--gsub); padding: 15px 40px;
-      cursor: pointer; margin-top: 28px;
-      transition: background .3s, border-color .3s;
-      animation: fadeUp .8s ease .5s both;
+      border: 1px solid var(--gsub); padding: 14px 30px;
+      cursor: pointer; margin-top: 30px; text-transform: uppercase;
+      opacity: 0;
     }
-    .btn:active { background: rgba(201,164,110,0.08); border-color: rgba(201,164,110,0.5); }
-    @keyframes fadeUp {
-      from { opacity: 0; transform: translateY(14px); }
-      to   { opacity: 1; transform: translateY(0); }
-    }
-    @keyframes scaleIn {
-      from { opacity: 0; transform: scale(.94); }
-      to   { opacity: 1; transform: scale(1); }
-    }
-    @keyframes slideIn {
-      from { transform: translateX(-18px); opacity: 0; }
-      to   { transform: translateX(0); opacity: 1; }
+    /* Button appears after 1.5s delay on active page */
+    .page.active .btn {
+      animation: fadeUpBtn 0.8s ease forwards 1.5s;
     }
 
-    /* ── PAGE 1: COVER ── */
-    .cover-seal {
-      width: clamp(112px, 28vw, 138px); height: clamp(112px, 28vw, 138px);
-      border-radius: 50%; border: 1px solid rgba(201,164,110,0.42);
-      display: flex; align-items: center; justify-content: center;
-      position: relative; margin-bottom: 24px;
-      background:
-        radial-gradient(circle at 30% 28%, rgba(232,201,138,0.16), rgba(28,53,84,0.88) 56%),
-        linear-gradient(145deg, rgba(123,175,212,0.22), rgba(193,123,138,0.2));
-      overflow: visible;
-      animation: fadeUp .8s ease .1s both;
+    @keyframes fadeUpBtn {
+      from { opacity: 0; transform: translateY(15px); }
+      to { opacity: 1; transform: translateY(0); }
     }
-    .cover-seal::before {
-      content: ''; position: absolute; inset: -8px;
-      border-radius: 50%; border: 1px solid rgba(201,164,110,0.18);
-    }
-    .seal-monogram {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      color: #fff7ea;
-      font-family: Georgia, 'Times New Roman', serif;
-      font-size: clamp(1.2rem, 4.3vw, 1.5rem);
-      font-style: normal;
-      font-weight: 700;
-      letter-spacing: 1px;
-      line-height: 1;
-      text-transform: uppercase;
-      text-shadow: 0 2px 9px rgba(0,0,0,0.35);
-    }
-    .seal-letter {
-      display: inline-block;
-      position: relative;
-    }
-    .seal-letter.left { left: -3px; }
-    .seal-letter.right { right: -3px; }
-    .seal-monogram .heart {
-      color: #ffd8d8;
-      margin: 0 4px;
-      font-size: 0.82em;
-      vertical-align: middle;
-    }
-    @keyframes pulse { 0%,100%{transform:scale(1);opacity:.75} 50%{transform:scale(1.18);opacity:1} }
+
+    /* ── CONTENT STYLES ── */
     .couple-name {
       font-family: 'Cormorant Garamond', serif;
-      font-style: italic; font-weight: 300;
-      font-size: clamp(2.6rem, 12vw, 4rem);
-      color: var(--cream); line-height: 1.15; letter-spacing: 3px;
-      text-transform: capitalize;
-      text-shadow: 0 2px 14px rgba(0,0,0,0.25);
-      animation: fadeUp .8s ease .2s both;
+      font-style: italic; font-size: clamp(2.5rem, 10vw, 3.8rem);
+      color: var(--cream); margin: 15px 0;
     }
-    .invite-line {
-      font-family: 'Montserrat', sans-serif;
-      font-size: .65rem; font-weight: 500; letter-spacing: 4.2px; text-transform: uppercase;
-      color: var(--soft); margin-top: 8px;
-      animation: fadeUp .8s ease .35s both;
-    }
-    .poem-block {
-      font-family: 'Cormorant Garamond', serif;
-      font-style: italic; font-weight: 400; font-size: .94rem;
-      color: rgba(237,224,207,0.72); line-height: 1.72;
-      margin-top: 14px; max-width: 280px;
-      animation: fadeUp .8s ease .45s both;
-    }
+    .huge-text { font-family: 'Cormorant Garamond', serif; font-size: 6rem; color: var(--gold); line-height: 1; }
+    .gold-line { width: 60px; height: 1px; background: var(--gold); margin: 15px auto; opacity: 0.5; }
 
-    /* ── PAGE 2: DATE ── */
-    .date-card {
-      width: min(340px, 88vw); border: 1px solid var(--gsub);
-      padding: 34px 28px 30px; position: relative;
-      text-align: center; animation: scaleIn .7s ease .1s both;
+    /* ── PHOTO POP EFFECT ── */
+    .photo-wrap { width: min(350px, 85vw); }
+    .frame {
+      border: 1px solid var(--gold); padding: 8px;
+      background: rgba(255,255,255,0.03);
+      box-shadow: 0 15px 40px rgba(0,0,0,0.5);
+      opacity: 0; transform: scale(0.9);
     }
-    .date-card::before { content: ''; position: absolute; top: -1px; left: -1px; width: 20px; height: 20px; border-top: 2px solid var(--gold); border-left: 2px solid var(--gold); }
-    .date-card::after  { content: ''; position: absolute; top: -1px; right: -1px; width: 20px; height: 20px; border-top: 2px solid var(--gold); border-right: 2px solid var(--gold); }
-    .cb-bl { position: absolute; bottom: -1px; left: -1px; width: 20px; height: 20px; border-bottom: 2px solid var(--gold); border-left: 2px solid var(--gold); }
-    .cb-br { position: absolute; bottom: -1px; right: -1px; width: 20px; height: 20px; border-bottom: 2px solid var(--gold); border-right: 2px solid var(--gold); }
-    .dc-kicker { font-family: 'Montserrat', sans-serif; font-size: .57rem; font-weight: 600; letter-spacing: 6px; text-transform: uppercase; color: var(--gold); margin-bottom: 18px; }
-    .dc-num { font-family: 'Cormorant Garamond', serif; font-size: clamp(5rem,23vw,7.5rem); font-weight: 300; color: var(--cream); line-height: 1; }
-    .dc-month { font-family: 'Cormorant Garamond', serif; font-style: italic; font-weight: 300; font-size: clamp(1.7rem,7vw,2.4rem); color: var(--gold); margin-top: -4px; }
-    .dc-year { font-family: 'Montserrat', sans-serif; font-size: .65rem; font-weight: 300; letter-spacing: 10px; color: var(--muted); margin-top: 6px; }
-    .dc-note { font-family: 'Cormorant Garamond', serif; font-style: italic; font-size: .92rem; font-weight: 300; color: var(--muted); margin-top: 16px; }
-
-    /* ── PAGE 3: VENUE ── */
-    .venue-block { display: flex; flex-direction: column; align-items: center; animation: scaleIn .7s ease .1s both; }
-    .venue-pre { font-family: 'Montserrat', sans-serif; font-size: .58rem; font-weight: 500; letter-spacing: 5px; text-transform: uppercase; color: var(--gold); opacity: .8; margin-bottom: 12px; }
-    .venue-city { font-family: 'Cormorant Garamond', serif; font-style: italic; font-weight: 300; font-size: clamp(3rem,14vw,4.5rem); color: var(--cream); line-height: 1; }
-    .venue-hall { font-family: 'Montserrat', sans-serif; font-size: .73rem; font-weight: 400; letter-spacing: 3px; color: rgba(237,224,207,0.65); margin-top: 6px; }
-    .venue-state { font-family: 'Montserrat', sans-serif; font-size: .63rem; font-weight: 300; letter-spacing: 4px; text-transform: uppercase; color: var(--muted); margin-top: 4px; }
-    .venue-pin { font-size: 1.4rem; margin-top: 18px; opacity: .7; animation: pinFloat 3s ease-in-out infinite; }
-    @keyframes pinFloat { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-5px)} }
-
-    /* ── PAGE 4: DETAILS ── */
-    #page-4 { justify-content: flex-start; padding-top: 68px; padding-bottom: 68px; }
-    .details-scroll {
-      width: min(540px, 94vw); max-height: calc(100vh - 136px);
-      overflow-y: auto; scrollbar-width: none; -ms-overflow-style: none;
-      display: flex; flex-direction: column; gap: 10px;
-      padding: 0 6px;
+    .page.active .frame {
+      animation: popEffect 0.8s cubic-bezier(0.26, 0.53, 0.74, 1.48) forwards 0.3s;
     }
+    @keyframes popEffect {
+      to { opacity: 1; transform: scale(1); }
+    }
+    .frame img { width: 100%; aspect-ratio: 4/5; object-fit: cover; display: block; border: 1px solid rgba(201,164,110,0.3); }
+
+    /* ── DETAILS CARD ── */
+    .details-scroll { width: 100%; max-width: 450px; overflow-y: auto; scrollbar-width: none; }
     .details-scroll::-webkit-scrollbar { display: none; }
     .dcard {
-      border: 1px solid rgba(201,164,110,0.16); background: rgba(255,255,255,0.03);
-      width: 100%;
-      padding: 16px 20px 16px 24px; text-align: center;
-      display: flex; align-items: center; justify-content: space-between; gap: 12px;
-      position: relative; animation: slideIn .5s ease calc(var(--i,0)*.1s) both;
+      border: 1px solid var(--gsub); background: rgba(255,255,255,0.02);
+      padding: 20px; margin-bottom: 10px; text-align: center;
     }
-    .dcard::before { content: ''; position: absolute; top: 0; left: 0; width: 2px; height: 100%; background: var(--ac, var(--gold)); opacity: .7; }
-    .dc-inner { flex: 1; min-width: 0; text-align: center; }
-    .dcard-label { font-family: 'Montserrat', sans-serif; font-size: .55rem; font-weight: 600; letter-spacing: 4px; text-transform: uppercase; color: var(--ac, var(--gold)); margin-bottom: 5px; }
-    .dcard-value { font-family: 'Cormorant Garamond', serif; font-size: 1.24rem; font-weight: 500; color: var(--cream); line-height: 1.3; letter-spacing: .4px; }
-    .dcard-sub { font-family: 'Montserrat', sans-serif; font-size: .65rem; font-weight: 300; color: var(--muted); margin-top: 3px; line-height: 1.5; }
-    .map-btn {
-      flex-shrink: 0; width: 38px; height: 38px; border-radius: 50%;
-      display: flex; align-items: center; justify-content: center;
-      background: rgba(201,164,110,0.08); border: 1px solid rgba(201,164,110,0.25);
-      text-decoration: none; transition: background .2s;
-    }
-    .map-btn:active { background: rgba(201,164,110,0.2); }
-
-    /* ── PAGE 6-7: PHOTO FRAMES ── */
-    .photo-wrap {
-      width: min(360px, 88vw);
-      animation: scaleIn .65s ease .1s both;
-    }
-    .photo-kicker {
-      font-family: 'Montserrat', sans-serif;
-      font-size: .6rem; font-weight: 600; letter-spacing: 5px;
-      color: var(--gold); text-transform: uppercase;
-      margin-bottom: 12px;
-    }
-    .frame {
-      border: 1px solid rgba(201,164,110,0.4);
-      padding: 10px; background: rgba(255,255,255,0.03);
-      box-shadow: 0 12px 38px rgba(0,0,0,0.25);
-    }
-    .frame img {
-      width: 100%; aspect-ratio: 4 / 5; object-fit: cover;
-      display: block; border: 1px solid rgba(201,164,110,0.24);
-      background: #14243a;
-    }
-    .img-placeholder {
-      width: 100%;
-      aspect-ratio: 4 / 5;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      border: 1px dashed rgba(201,164,110,0.5);
-      background:
-        linear-gradient(145deg, rgba(255,255,255,0.03), rgba(255,255,255,0.01)),
-        repeating-linear-gradient(-45deg, rgba(201,164,110,0.08) 0 12px, rgba(201,164,110,0.02) 12px 24px);
-      color: var(--soft);
-      font-family: 'Montserrat', sans-serif;
-      font-size: .72rem;
-      letter-spacing: 3px;
-      text-transform: uppercase;
-    }
-    .photo-caption {
-      margin-top: 12px;
-      font-family: 'Cormorant Garamond', serif;
-      font-size: 1.05rem; font-style: italic;
-      color: var(--soft);
-    }
-
-    /* ── CONTACT DRAWER ── */
-    .drawer {
-      position: fixed; bottom: 0; left: 0; width: 100%; z-index: 70;
-      transform: translateY(calc(100% - 50px));
-      transition: transform .4s cubic-bezier(.34,1.1,.64,1);
-    }
-    .drawer.open { transform: translateY(0); }
-    .drawer-handle {
-      background: rgba(17,34,54,0.97); border-top: 1px solid var(--gsub);
-      display: flex; align-items: center; justify-content: center; gap: 8px;
-      padding: 15px; cursor: pointer; user-select: none;
-      font-family: 'Montserrat', sans-serif; font-size: .58rem;
-      font-weight: 600; letter-spacing: 5px; text-transform: uppercase; color: var(--gold);
-    }
-    .drawer-arrow { transition: transform .4s; font-size: .65rem; }
-    .drawer.open .drawer-arrow { transform: rotate(180deg); }
-    .drawer-body {
-      background: rgba(13,27,46,0.98); border-top: 1px solid rgba(201,164,110,0.12);
-      padding: 22px 24px 32px; display: flex; flex-wrap: wrap; gap: 12px; justify-content: center;
-    }
-    .cpill { border: 1px solid rgba(201,164,110,0.18); padding: 12px 20px; text-align: center; flex: 1; min-width: 140px; }
-    .cpill-name { font-family: 'Montserrat', sans-serif; font-size: .56rem; font-weight: 500; letter-spacing: 2px; text-transform: uppercase; color: var(--gold); margin-bottom: 6px; }
-    .cpill-num { font-family: 'Cormorant Garamond', serif; font-size: 1rem; color: var(--cream); }
-
-    /* ── MOBILE TUNING ── */
-    @media (max-width: 900px) {
-      .page { padding: 64px 20px 74px; }
-      .details-scroll { width: min(560px, 96vw); padding: 0 4px; }
-      .dcard { padding: 16px 16px 16px 20px; }
-      .dcard-label { letter-spacing: 3px; }
-      .dcard-value { font-size: 1.2rem; }
-    }
-
-    @media (max-width: 520px) {
-      .page { padding: 62px 14px 76px; }
-      .page-dots { top: 16px; gap: 6px; }
-      .dot { width: 5px; height: 5px; }
-      .dot.active { width: 16px; }
-      #back-btn { top: 10px; left: 12px; width: 34px; height: 34px; }
-      .details-scroll { width: 100%; max-height: calc(100vh - 140px); padding: 0; }
-      .dcard { padding: 15px 14px 15px 18px; }
-      .dcard-value { font-size: 1.14rem; }
-      .map-btn { width: 34px; height: 34px; }
-      .photo-wrap { width: 92vw; }
-      .drawer-handle { letter-spacing: 4px; padding: 14px; }
-      .drawer-body { padding: 18px 14px 24px; }
-      .cpill { min-width: 100%; }
-    }
-  </style>
-</head>
-<body>
-
-<div class="bg"></div>
-<canvas id="petal-canvas"></canvas>
-
-<div class="page-dots">
-  <div class="dot active" data-page="0"></div>
-  <div class="dot" data-page="1"></div>
-  <div class="dot" data-page="2"></div>
-  <div class="dot" data-page="3"></div>
-  <div class="dot" data-page="4"></div>
-  <div class="dot" data-page="5"></div>
-  <div class="dot" data-page="6"></div>
-  <div class="dot" data-page="7"></div>
-</div>
-
-<button id="back-btn" onclick="goBack()">&#8592;</button>
-
-<!-- PAGE 1: COVER -->
-<section id="page-1" class="page active">
-  <div class="cover-seal">
-    <div class="seal-monogram"><span class="seal-letter left">A</span><span class="heart">&#9825;</span><span class="seal-letter right">N</span></div>
-  </div>
-  <div class="ornament" style="animation:fadeUp .8s ease .15s both;">&mdash; &#10022; &mdash;</div>
-  <h1 class="couple-name">Alex &amp; Neha</h1>
-  <p class="invite-line">Together with their families &middot; invite you to celebrate</p>
-  <p class="poem-block">
-    Where two hearts became one promise,<br>
-    where laughter found its gentle home &mdash;<br>
-    we built a world from quiet moments,<br>
-    and called it love, and called it our own.
-  </p>
-  <button class="btn" onclick="goToPage(1)">Save the Date</button>
-</section>
-
-<!-- PAGE 2: DATE -->
-<section id="page-2" class="page">
-  <div class="date-card">
-    <div class="cb-bl"></div><div class="cb-br"></div>
-    <div class="dc-kicker">Save the Date</div>
-    <div class="gold-line"></div>
-    <div class="dc-num">24</div>
-    <div class="dc-month">May</div>
-    <div class="dc-year">2 0 2 6</div>
-    <div class="gold-line" style="margin-top:18px;"></div>
-    <div class="dc-note">One glorious day &nbsp;&middot;&nbsp; One love story</div>
-  </div>
-  <button class="btn" onclick="goToPage(2)">The Venue</button>
-</section>
-
-<!-- PAGE 3: VENUE -->
-<section id="page-3" class="page">
-  <div class="venue-block">
-    <div class="venue-pre">We&#39;re getting married in</div>
-    <div class="gold-line"></div>
-    <div class="venue-city">Dindigul</div>
-    <div class="venue-state">Tamil Nadu &nbsp;&middot;&nbsp; India</div>
-    <div class="gold-line" style="margin-top:14px;"></div>
-    <div style="font-family:'Cormorant Garamond',serif;font-style:italic;font-size:.88rem;color:var(--muted);">Sunday, 24 May 2026</div>
-    <div class="venue-pin">&#128205;</div>
-  </div>
-  <button class="btn" onclick="goToPage(3)" style="margin-top:16px;">Full Details</button>
-</section>
-
-<!-- PAGE 4: DETAILS -->
-<section id="page-4" class="page">
-  <div class="details-scroll">
-
-    <div class="dcard" style="--i:0;--ac:#7BAFD4;">
-      <div class="dc-inner">
-        <div class="dcard-label">The Groom</div>
-        <div class="dcard-value">L Alex Pravin</div>
-        <div class="dcard-sub">Son of A Leo John &amp; S Louis Carolin Mary</div>
-      </div>
-    </div>
-
-    <div class="dcard" style="--i:1;--ac:#C17B8A;">
-      <div class="dc-inner">
-        <div class="dcard-label">The Bride</div>
-        <div class="dcard-value">J Neha Lincy</div>
-        <div class="dcard-sub">Daughter of V James &amp; D Louis Suguma</div>
-      </div>
-    </div>
-
-    <button class="btn" onclick="goToPage(4)" style="margin-top:8px;">Venue &amp; Schedule</button>
-
-  </div>
-</section>
-
-<!-- PAGE 5: LOCATION TILES -->
-<section id="page-5" class="page">
-  <div class="details-scroll">
-
-    <div class="dcard" style="--i:0;--ac:#C9A46E;">
-      <div class="dc-inner">
-        <div class="dcard-label">Ceremony</div>
-        <div class="dcard-value">10:00 AM</div>
-        <div class="dcard-sub">St. Joseph&#39;s Cathedral &nbsp;&middot;&nbsp; Dindigul Diocese<br>Tamil Nadu &nbsp;&middot;&nbsp; Sunday, 24 May 2026</div>
-      </div>
-      <a class="map-btn" href="https://www.google.com/maps/search/?api=1&query=st+joseph+cathedral+dindigul+diocese+tamil+nadu" target="_blank">
-        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none">
-          <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z" fill="none" stroke="#C9A46E" stroke-width="1.5"/>
-          <circle cx="12" cy="9" r="2.5" fill="#C9A46E"/>
-        </svg>
-      </a>
-    </div>
-
-    <div class="dcard" style="--i:1;--ac:#90B99A;">
-      <div class="dc-inner">
-        <div class="dcard-label">Reception &amp; Lunch</div>
-        <div class="dcard-value">12:00 PM</div>
-        <div class="dcard-sub">Vanniar Mahal &nbsp;&middot;&nbsp; Aarthi Theatre Road<br>Dindigul &nbsp;&middot;&nbsp; Celebrations to follow</div>
-      </div>
-      <a class="map-btn" href="https://www.google.com/maps/search/?api=1&query=Vanniar+Mahal+Aarthi+Theatre+Road+Dindigul" target="_blank">
-        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none">
-          <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z" fill="none" stroke="#90B99A" stroke-width="1.5"/>
-          <circle cx="12" cy="9" r="2.5" fill="#90B99A"/>
-        </svg>
-      </a>
-    </div>
-
-  </div>
-</section>
-
-<!-- PAGE 6: PHOTO 1 -->
-<section id="page-6" class="page">
-  <div class="photo-wrap">
-    <div class="photo-kicker">Memories</div>
-    <div class="frame">
-      <div class="img-placeholder">Image Placeholder 1</div>
-    </div>
-    <div class="photo-caption">Swipe left for the next frame</div>
-  </div>
-</section>
-
-<!-- PAGE 7: PHOTO 2 -->
-<section id="page-7" class="page">
-  <div class="photo-wrap">
-    <div class="photo-kicker">Memories</div>
-    <div class="frame">
-      <div class="img-placeholder">Image Placeholder 2</div>
-    </div>
-    <div class="photo-caption">Swipe left for the next frame</div>
-  </div>
-</section>
-
-<!-- PAGE 8: PHOTO 3 -->
-<section id="page-8" class="page">
-  <div class="photo-wrap">
-    <div class="photo-kicker">Memories</div>
-    <div class="frame">
-      <div class="img-placeholder">Image Placeholder 3</div>
-    </div>
-    <div class="photo-caption">Thank you for celebrating with us</div>
-  </div>
-</section>
-
-
-<!-- Contact Drawer -->
-<div class="drawer" id="drawer">
-  <div class="drawer-handle" onclick="toggleDrawer()">
-    Contact &nbsp;<span class="drawer-arrow">&#9650;</span>
-  </div>
-  <div class="drawer-body">
-    <div class="cpill">
-      <div class="cpill-name">Leo John &nbsp;&middot;&nbsp; Groom&#39;s Father</div>
-      <div class="cpill-num">+91 91501 06035</div>
-    </div>
-    <div class="cpill">
-      <div class="cpill-name">James &nbsp;&middot;&nbsp; Bride&#39;s Father</div>
-      <div class="cpill-num">+91 63826 40258</div>
-    </div>
-  </div>
-</div>
-
-<script>
-  const canvas = document.getElementById('petal-canvas');
-  const ctx    = canvas.getContext('2d');
-  let W, H, petals = [];
-  function resize() { W = canvas.width = innerWidth; H = canvas.height = innerHeight; }
-  window.addEventListener('resize', resize); resize();
-
-  const PC = [[255,182,193],[255,160,180],[253,208,220],[240,148,172]];
-
-  class Petal {
-    constructor(burst) {
-      const r = PC[Math.floor(Math.random() * PC.length)];
-      const a = burst ? (Math.random()*.35+.12) : (Math.random()*.2+.07);
-      this.color = `rgba(${r[0]},${r[1]},${r[2]},${a.toFixed(2)})`;
-      this.size  = Math.random() * 5 + 3;
-      if (burst) {
-        const ang = Math.random() * Math.PI * 2;
-        const sp  = Math.random() * 7 + 3;
-        this.x = W/2 + (Math.random()-.5)*60; this.y = H/2 + (Math.random()-.5)*60;
-        this.vx = Math.cos(ang)*sp; this.vy = Math.sin(ang)*sp - 5;
-        this.gravity = .12; this.fade = .016;
-      } else {
-        this.x = Math.random()*W; this.y = -10;
-        this.vx = (Math.random()-.5)*.7; this.vy = Math.random()*.7 + .25;
-        this.gravity = .004; this.fade = .003;
-      }
-      this.rot = Math.random()*Math.PI*2;
-      this.rotSp = (Math.random()-.5)*.05;
-      this.drag = .99; this.alpha = 1;
-    }
-    tick() {
-      this.x += this.vx; this.y += this.vy;
-      this.vy += this.gravity; this.vx *= this.drag;
-      this.rot += this.rotSp; this.alpha -= this.fade;
-    }
-    draw() {
-      ctx.save();
-      ctx.globalAlpha = Math.max(0, this.alpha); ctx.fillStyle = this.color;
-      ctx.translate(this.x, this.y); ctx.rotate(this.rot);
-      ctx.beginPath(); ctx.ellipse(0, 0, this.size, this.size*.55, 0, 0, Math.PI*2);
-      ctx.fill(); ctx.restore();
-    }
-  }
-
-  function burst() { for (let i=0;i<45;i++) petals.push(new Petal(true)); }
-  setInterval(() => { if (currentPage === 0) petals.push(new Petal(false)); }, 700);
-
-  (function loop() {
-    ctx.clearRect(0,0,W,H);
-    petals = petals.filter(p => p.alpha > 0 && p.y < H+20);
-    petals.forEach(p => { p.tick(); p.draw(); });
-    requestAnimationFrame(loop);
-  })();
-
-  const pages = ['page-1','page-2','page-3','page-4','page-5','page-6','page-7','page-8'];
-  const dots  = document.querySelectorAll('.dot');
-  let currentPage = 0, transitioning = false;
-  let touchStartX = 0, touchStartY = 0;
-
-  function goToPage(idx) {
-    if (transitioning || idx === currentPage) return;
-    if (idx < 0 || idx >= pages.length) return;
-    transitioning = true; burst();
-    const direction = idx > currentPage ? 'forward' : 'back';
-    const old = document.getElementById(pages[currentPage]);
-    const nxt = document.getElementById(pages[idx]);
-
-    old.classList.add(direction === 'forward' ? 'leaving-left' : 'leaving-right');
-    old.classList.remove('active');
-
-    nxt.classList.add('active', direction === 'forward' ? 'from-right' : 'from-left');
-    requestAnimationFrame(() => {
-      nxt.classList.remove('from-right', 'from-left');
-    });
-
-    setTimeout(() => {
-      old.classList.remove('leaving-left', 'leaving-right');
-      nxt.querySelectorAll('[style*="--i"]').forEach(el => {
-        el.style.animation = 'none'; el.offsetHeight; el.style.animation = '';
-      });
-      currentPage = idx; updateUI(); transitioning = false;
-    }, 560);
-  }
-
-  function goBack() { if (currentPage > 0) goToPage(currentPage - 1); }
-
-  function updateUI() {
-    dots.forEach((d,i) => d.classList.toggle('active', i === currentPage));
-    document.getElementById('back-btn').classList.toggle('visible', currentPage > 0);
-    const drawer = document.getElementById('drawer');
-    drawer.style.display = currentPage === 4 ? '' : 'none';
-    if (currentPage !== 4) drawer.classList.remove('open');
-  }
-
-  function toggleDrawer() { document.getElementById('drawer').classList.toggle('open'); }
-
-  dots.forEach(d => d.addEventListener('click', () => goToPage(+d.dataset.page)));
-
-  // Swipe left: next page. Swipe right: same as back button.
-  document.addEventListener('touchstart', (e) => {
-    if (e.touches.length !== 1) return;
-    touchStartX = e.touches[0].clientX;
-    touchStartY = e.touches[0].clientY;
-  }, { passive: true });
-
-  document.addEventListener('touchend', (e) => {
-    if (transitioning || !touchStartX) return;
-    const t = e.changedTouches[0];
-    const dx = t.clientX - touchStartX;
-    const dy = t.clientY - touchStartY;
-    touchStartX = 0;
-    touchStartY = 0;
-
-    if (Math.abs(dx) < 40 || Math.abs(dx) < Math.abs(dy) * 1.2) return;
-    if (dx < 0) {
-      goToPage((currentPage + 1) % pages.length);
-    } else if (dx > 0) {
-      goToPage((currentPage - 1 + pages.length) % pages.length);
-    }
-  }, { passive: true });
-
-  updateUI();
-</script>
-
-</body>
-</html>
+    .dcard-label { font-size: 0.6rem; color: var(--gold); letter-spacing: 3px; text-transform: uppercase; }
+    .dcard-value { font
