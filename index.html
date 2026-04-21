@@ -121,4 +121,163 @@
       padding: 20px; margin-bottom: 10px; text-align: center;
     }
     .dcard-label { font-size: 0.6rem; color: var(--gold); letter-spacing: 3px; text-transform: uppercase; }
-    .dcard-value { font
+    .dcard-value { font-family: 'Cormorant Garamond', serif; font-size: 1.3rem; color: var(--cream); margin: 5px 0; }
+
+    /* ── CONTACT DRAWER ── */
+    .drawer {
+      position: fixed; bottom: 0; left: 0; width: 100%; z-index: 200;
+      background: #0a1d16; border-top: 1px solid var(--gold);
+      transform: translateY(calc(100% - 50px)); transition: transform 0.4s ease;
+    }
+    .drawer.open { transform: translateY(0); }
+    .drawer-handle { padding: 15px; color: var(--gold); cursor: pointer; letter-spacing: 4px; font-size: 0.6rem; font-weight: 700; }
+    .drawer-body { padding: 20px; display: flex; flex-direction: column; gap: 15px; }
+
+  </style>
+</head>
+<body>
+
+<div class="bg"></div>
+<canvas id="petal-canvas"></canvas>
+
+<div class="page-dots">
+  <div class="dot active" data-page="0"></div>
+  <div class="dot" data-page="1"></div>
+  <div class="dot" data-page="2"></div>
+  <div class="dot" data-page="3"></div>
+  <div class="dot" data-page="4"></div>
+  <div class="dot" data-page="5"></div>
+  <div class="dot" data-page="6"></div>
+  <div class="dot" data-page="7"></div>
+</div>
+
+<button id="back-btn" onclick="goBack()">←</button>
+
+<section id="page-0" class="page active">
+  <div class="ornament">✦</div>
+  <h1 class="couple-name">Alex & Neha</h1>
+  <p style="color: var(--gold); letter-spacing: 2px; font-size: 0.7rem;">INVITE YOU TO CELEBRATE</p>
+  <button class="btn" onclick="goToPage(1)">Save the Date</button>
+</section>
+
+<section id="page-1" class="page">
+  <p style="color: var(--gold); letter-spacing: 5px;">MAY</p>
+  <div class="huge-text">24</div>
+  <p style="color: var(--cream); letter-spacing: 8px;">2026</p>
+  <button class="btn" onclick="goToPage(2)">The Venue</button>
+</section>
+
+<section id="page-2" class="page">
+  <p style="color: var(--gold); margin-bottom: 10px;">WE ARE HEADED TO</p>
+  <h1 class="couple-name" style="font-size: 4rem;">Dindigul</h1>
+  <p style="color: var(--muted);">Tamil Nadu, India</p>
+  <button class="btn" onclick="goToPage(3)">Details</button>
+</section>
+
+<section id="page-3" class="page">
+  <div class="details-scroll">
+    <div class="dcard">
+      <div class="dcard-label">Groom</div>
+      <div class="dcard-value">L Alex Pravin</div>
+      <p style="font-size: 0.7rem; color: var(--muted);">Son of A Leo John & S Louis Carolin Mary</p>
+    </div>
+    <div class="dcard">
+      <div class="dcard-label">Bride</div>
+      <div class="dcard-value">J Neha Lincy</div>
+      <p style="font-size: 0.7rem; color: var(--muted);">Daughter of V James & D Louis Suguma</p>
+    </div>
+  </div>
+  <button class="btn" onclick="goToPage(4)">Schedule</button>
+</section>
+
+<section id="page-4" class="page">
+  <div class="details-scroll">
+    <div class="dcard">
+      <div class="dcard-label">Wedding Mass</div>
+      <div class="dcard-value">10:00 AM</div>
+      <p style="font-size: 0.7rem; color: var(--muted);">St. Joseph's Cathedral</p>
+    </div>
+    <div class="dcard">
+      <div class="dcard-label">Reception</div>
+      <div class="dcard-value">12:00 PM</div>
+      <p style="font-size: 0.7rem; color: var(--muted);">Vanniar Mahal</p>
+    </div>
+  </div>
+  <button class="btn" onclick="goToPage(5)">Memories</button>
+</section>
+
+<section id="page-5" class="page">
+  <div class="photo-wrap">
+    <div class="frame"><img src="both.jpeg"></div>
+  </div>
+</section>
+
+<section id="page-6" class="page">
+  <div class="photo-wrap">
+    <div class="frame"><img src="lovely_mischeif.jpg"></div>
+  </div>
+</section>
+
+<section id="page-7" class="page">
+  <div class="photo-wrap">
+    <div class="frame"><img src="beach.jpg"></div>
+    <p class="couple-name" style="font-size: 1.2rem; margin-top: 20px;">See you there!</p>
+  </div>
+</section>
+
+<div class="drawer" id="drawer">
+  <div class="drawer-handle" onclick="toggleDrawer()">CONTACT INFO ▲</div>
+  <div class="drawer-body">
+    <div style="color: var(--gold); font-size: 0.7rem;">LEO JOHN: <span style="color: var(--cream);">+91 91501 06035</span></div>
+    <div style="color: var(--gold); font-size: 0.7rem;">JAMES: <span style="color: var(--cream);">+91 63826 40258</span></div>
+  </div>
+</div>
+
+<script>
+  const canvas = document.getElementById('petal-canvas');
+  const ctx = canvas.getContext('2d');
+  let W, H, petals = [];
+  function resize() { W = canvas.width = innerWidth; H = canvas.height = innerHeight; }
+  window.addEventListener('resize', resize); resize();
+
+  class Petal {
+    constructor() {
+      this.x = Math.random()*W; this.y = -10;
+      this.size = Math.random()*4 + 2;
+      this.vx = (Math.random()-.5); this.vy = Math.random()*1 + 1;
+      this.alpha = 1;
+    }
+    update() { this.x += this.vx; this.y += this.vy; if (this.y > H) this.y = -10; }
+    draw() { ctx.fillStyle = `rgba(201, 164, 110, ${this.alpha})`; ctx.beginPath(); ctx.arc(this.x, this.y, this.size, 0, Math.PI*2); ctx.fill(); }
+  }
+  for(let i=0; i<30; i++) petals.push(new Petal());
+  function anim() { ctx.clearRect(0,0,W,H); petals.forEach(p => { p.update(); p.draw(); }); requestAnimationFrame(anim); }
+  anim();
+
+  let currentPage = 0;
+  const pages = document.querySelectorAll('.page');
+  const dots = document.querySelectorAll('.dot');
+
+  function goToPage(idx) {
+    pages[currentPage].classList.remove('active');
+    currentPage = idx;
+    pages[currentPage].classList.add('active');
+    updateUI();
+  }
+
+  function goBack() { if (currentPage > 0) goToPage(currentPage - 1); }
+
+  function updateUI() {
+    dots.forEach((d, i) => d.classList.toggle('active', i === currentPage));
+    document.getElementById('back-btn').classList.toggle('visible', currentPage > 0);
+    // Show drawer only on Schedule page (Page 4)
+    document.getElementById('drawer').style.display = (currentPage === 4) ? 'block' : 'none';
+  }
+
+  function toggleDrawer() { document.getElementById('drawer').classList.toggle('open'); }
+  dots.forEach(d => d.addEventListener('click', () => goToPage(parseInt(d.dataset.page))));
+  updateUI();
+</script>
+
+</body>
+</html>
