@@ -5,14 +5,20 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>Alex & Neha — Wedding Invitation</title>
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Lobster+Two:ital,wght@1,700&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='5' fill='%231C3554'/><rect x='1.5' y='1.5' width='29' height='29' rx='4' fill='none' stroke='%23C9A46E' stroke-width='1'/><text x='16' y='23' text-anchor='middle' font-family='Georgia,serif' font-style='italic' font-weight='400' font-size='14' fill='%23E8C98A'>A%26N</text></svg>">
   <style>
     :root {
-      --navy:  #0a1d16; /* Deep Emerald/Navy Hybrid */
+      --navy:  #1C3554;
+      --navy2: #1F3D62;
       --gold:  #C9A46E;
       --gsub:  rgba(201,164,110,0.30);
+      --gsh:   #E8C98A;
       --cream: #EDE0CF;
-      --soft:  rgba(237,224,207,0.84);
+      --blush: #C17B8A;
+      --steel: #7BAFD4;
+      --sage:  #90B99A;
       --muted: rgba(237,224,207,0.72);
+      --soft:  rgba(237,224,207,0.84);
     }
 
     *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
@@ -26,14 +32,37 @@
       overscroll-behavior: none;
     }
 
-    .bg { 
-        position: fixed; inset: 0; z-index: 0;
-        background: radial-gradient(circle at center, #12372a 0%, #0a1d16 100%);
+    .bg { position: fixed; inset: 0; z-index: 0;
+      background:
+        radial-gradient(ellipse at 20% 75%, rgba(193,123,138,0.07) 0%, transparent 55%),
+        radial-gradient(ellipse at 80% 20%, rgba(201,164,110,0.07) 0%, transparent 55%),
+        #1C3554;
     }
-
     #petal-canvas { position: fixed; inset: 0; pointer-events: none; z-index: 100; }
 
-    /* ── NAVIGATION ── */
+    /* ── PAGES ── */
+    .page {
+      position: fixed; inset: 0;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      text-align: center; padding: 68px 28px 72px; z-index: 10;
+      opacity: 0; visibility: hidden;
+      pointer-events: none;
+      transform: translateX(52px);
+      transition: opacity .55s ease, transform .55s ease, visibility 0s .55s;
+    }
+    .page.active {
+      opacity: 1; visibility: visible;
+      pointer-events: auto;
+      transform: translateX(0);
+      transition: opacity .55s ease, transform .55s ease, visibility 0s 0s;
+    }
+    .page.active.from-right { opacity: 0; transform: translateX(56px); }
+    .page.active.from-left  { opacity: 0; transform: translateX(-56px); }
+    .page.leaving-left  { opacity: 0; transform: translateX(-56px); }
+    .page.leaving-right { opacity: 0; transform: translateX(56px); }
+
+    /* ── NAV DOTS ── */
     .page-dots {
       position: fixed; top: 22px; left: 50%; transform: translateX(-50%);
       display: flex; align-items: center; gap: 8px; z-index: 200;
@@ -48,91 +77,71 @@
     #back-btn {
       position: fixed; top: 14px; left: 18px;
       width: 36px; height: 36px; border-radius: 50%;
-      border: 1px solid var(--gsub); color: var(--gold); 
-      display: none; align-items: center; justify-content: center; 
-      z-index: 200; cursor: pointer;
+      border: 1px solid var(--gsub); background: transparent;
+      color: var(--gold); display: none; align-items: center;
+      justify-content: center; z-index: 200; cursor: pointer;
+      font-size: 0.95rem;
     }
     #back-btn.visible { display: flex; }
 
-    /* ── PAGE TRANSITIONS ── */
-    .page {
-      position: fixed; inset: 0;
-      display: flex; flex-direction: column;
-      align-items: center; justify-content: center;
-      text-align: center; padding: 68px 28px; z-index: 10;
-      opacity: 0; visibility: hidden;
-      transform: translateX(40px);
-      transition: opacity .5s ease, transform .5s ease;
-    }
-    .page.active {
-      opacity: 1; visibility: visible;
-      transform: translateX(0);
-    }
-
-    /* ── BUTTON STYLE ── */
-    .btn {
-      font-family: 'Montserrat', sans-serif;
-      font-size: 0.65rem; font-weight: 600; letter-spacing: 3px;
-      color: var(--gold); background: transparent;
-      border: 1px solid var(--gsub); padding: 14px 30px;
-      cursor: pointer; margin-top: 30px; text-transform: uppercase;
-      opacity: 0;
-    }
-    /* Button appears after 1.5s delay on active page */
-    .page.active .btn {
-      animation: fadeUpBtn 0.8s ease forwards 1.5s;
-    }
-
-    @keyframes fadeUpBtn {
-      from { opacity: 0; transform: translateY(15px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-
-    /* ── CONTENT STYLES ── */
-    .couple-name {
-      font-family: 'Cormorant Garamond', serif;
-      font-style: italic; font-size: clamp(2.5rem, 10vw, 3.8rem);
-      color: var(--cream); margin: 15px 0;
-    }
-    .huge-text { font-family: 'Cormorant Garamond', serif; font-size: 6rem; color: var(--gold); line-height: 1; }
-    .gold-line { width: 60px; height: 1px; background: var(--gold); margin: 15px auto; opacity: 0.5; }
-
     /* ── PHOTO POP EFFECT ── */
-    .photo-wrap { width: min(350px, 85vw); }
-    .frame {
-      border: 1px solid var(--gold); padding: 8px;
-      background: rgba(255,255,255,0.03);
-      box-shadow: 0 15px 40px rgba(0,0,0,0.5);
-      opacity: 0; transform: scale(0.9);
+    .photo-wrap {
+      width: min(360px, 88vw);
+      opacity: 0;
+      transform: scale(0.9);
     }
-    .page.active .frame {
-      animation: popEffect 0.8s cubic-bezier(0.26, 0.53, 0.74, 1.48) forwards 0.3s;
+    .page.active .photo-wrap {
+      animation: photoPop 0.8s cubic-bezier(0.26, 0.53, 0.74, 1.48) forwards 0.3s;
     }
-    @keyframes popEffect {
+    @keyframes photoPop {
       to { opacity: 1; transform: scale(1); }
     }
-    .frame img { width: 100%; aspect-ratio: 4/5; object-fit: cover; display: block; border: 1px solid rgba(201,164,110,0.3); }
 
-    /* ── DETAILS CARD ── */
-    .details-scroll { width: 100%; max-width: 450px; overflow-y: auto; scrollbar-width: none; }
-    .details-scroll::-webkit-scrollbar { display: none; }
-    .dcard {
-      border: 1px solid var(--gsub); background: rgba(255,255,255,0.02);
-      padding: 20px; margin-bottom: 10px; text-align: center;
+    .photo-kicker {
+      font-family: 'Montserrat', sans-serif;
+      font-size: .6rem; font-weight: 600; letter-spacing: 5px;
+      color: var(--gold); text-transform: uppercase; margin-bottom: 12px;
     }
-    .dcard-label { font-size: 0.6rem; color: var(--gold); letter-spacing: 3px; text-transform: uppercase; }
-    .dcard-value { font-family: 'Cormorant Garamond', serif; font-size: 1.3rem; color: var(--cream); margin: 5px 0; }
+    .frame {
+      border: 1px solid rgba(201,164,110,0.4);
+      padding: 10px; background: rgba(255,255,255,0.03);
+      box-shadow: 0 12px 38px rgba(0,0,0,0.25);
+    }
+    .frame img {
+      width: 100%; aspect-ratio: 4 / 5; object-fit: cover;
+      display: block; border: 1px solid rgba(201,164,110,0.24);
+    }
+    .photo-caption {
+      margin-top: 12px;
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.05rem; font-style: italic; color: var(--soft);
+    }
+
+    /* ── SHARED STYLES ── */
+    .gold-line { width: 52px; height: 1px; background: linear-gradient(90deg, transparent, var(--gold), transparent); margin: 13px auto; }
+    .couple-name { font-family: 'Cormorant Garamond', serif; font-style: italic; font-weight: 300; font-size: clamp(2.6rem, 12vw, 4rem); color: var(--cream); line-height: 1.15; letter-spacing: 3px; text-transform: capitalize; }
+    .btn { font-family: 'Montserrat', sans-serif; font-size: 0.62rem; font-weight: 600; letter-spacing: 4px; text-transform: uppercase; color: var(--gold); background: transparent; border: 1px solid var(--gsub); padding: 15px 40px; cursor: pointer; margin-top: 28px; }
 
     /* ── CONTACT DRAWER ── */
-    .drawer {
-      position: fixed; bottom: 0; left: 0; width: 100%; z-index: 200;
-      background: #0a1d16; border-top: 1px solid var(--gold);
-      transform: translateY(calc(100% - 50px)); transition: transform 0.4s ease;
-    }
+    .drawer { position: fixed; bottom: 0; left: 0; width: 100%; z-index: 70; transform: translateY(calc(100% - 50px)); transition: transform .4s cubic-bezier(.34,1.1,.64,1); }
     .drawer.open { transform: translateY(0); }
-    .drawer-handle { padding: 15px; color: var(--gold); cursor: pointer; letter-spacing: 4px; font-size: 0.6rem; font-weight: 700; }
-    .drawer-body { padding: 20px; display: flex; flex-direction: column; gap: 15px; }
+    .drawer-handle { background: rgba(17,34,54,0.97); border-top: 1px solid var(--gsub); display: flex; align-items: center; justify-content: center; gap: 8px; padding: 15px; cursor: pointer; font-family: 'Montserrat', sans-serif; font-size: .58rem; font-weight: 600; letter-spacing: 5px; text-transform: uppercase; color: var(--gold); }
+    .drawer-body { background: rgba(13,27,46,0.98); border-top: 1px solid rgba(201,164,110,0.12); padding: 22px 24px 32px; display: flex; flex-wrap: wrap; gap: 12px; justify-content: center; }
+    .cpill { border: 1px solid rgba(201,164,110,0.18); padding: 12px 20px; text-align: center; flex: 1; min-width: 140px; }
+    .cpill-name { font-family: 'Montserrat', sans-serif; font-size: .56rem; font-weight: 500; letter-spacing: 2px; text-transform: uppercase; color: var(--gold); margin-bottom: 6px; }
+    .cpill-num { font-family: 'Cormorant Garamond', serif; font-size: 1rem; color: var(--cream); }
 
+    /* ── DETAILS CARD ── */
+    .details-scroll { width: min(540px, 94vw); max-height: calc(100vh - 136px); overflow-y: auto; scrollbar-width: none; display: flex; flex-direction: column; gap: 10px; }
+    .dcard { border: 1px solid rgba(201,164,110,0.16); background: rgba(255,255,255,0.03); width: 100%; padding: 16px 20px; text-align: center; display: flex; align-items: center; justify-content: center; position: relative; }
+    .dcard-label { font-family: 'Montserrat', sans-serif; font-size: .55rem; font-weight: 600; letter-spacing: 4px; text-transform: uppercase; color: var(--gold); margin-bottom: 5px; }
+    .dcard-value { font-family: 'Cormorant Garamond', serif; font-size: 1.24rem; font-weight: 500; color: var(--cream); }
+    .dcard-sub { font-family: 'Montserrat', sans-serif; font-size: .65rem; font-weight: 300; color: var(--muted); margin-top: 3px; }
+
+    @media (max-width: 520px) {
+      .page { padding: 62px 14px 76px; }
+      .photo-wrap { width: 92vw; }
+    }
   </style>
 </head>
 <body>
@@ -153,83 +162,105 @@
 
 <button id="back-btn" onclick="goBack()">←</button>
 
-<section id="page-0" class="page active">
-  <div class="ornament">✦</div>
+<section id="page-1" class="page active">
   <h1 class="couple-name">Alex & Neha</h1>
-  <p style="color: var(--gold); letter-spacing: 2px; font-size: 0.7rem;">INVITE YOU TO CELEBRATE</p>
-  <button class="btn" onclick="goToPage(1)">Save the Date</button>
-</section>
-
-<section id="page-1" class="page">
-  <p style="color: var(--gold); letter-spacing: 5px;">MAY</p>
-  <div class="huge-text">24</div>
-  <p style="color: var(--cream); letter-spacing: 8px;">2026</p>
-  <button class="btn" onclick="goToPage(2)">The Venue</button>
+  <p style="color: var(--gold); letter-spacing: 4px; font-size: .7rem; margin-top: 10px;">SAVE THE DATE</p>
+  <button class="btn" onclick="goToPage(1)">Invitation</button>
 </section>
 
 <section id="page-2" class="page">
-  <p style="color: var(--gold); margin-bottom: 10px;">WE ARE HEADED TO</p>
-  <h1 class="couple-name" style="font-size: 4rem;">Dindigul</h1>
-  <p style="color: var(--muted);">Tamil Nadu, India</p>
-  <button class="btn" onclick="goToPage(3)">Details</button>
+  <div style="font-family: 'Cormorant Garamond', serif; font-size: 6rem; color: var(--cream);">24</div>
+  <div style="font-family: 'Montserrat', sans-serif; letter-spacing: 8px; color: var(--gold);">MAY 2026</div>
+  <button class="btn" onclick="goToPage(2)">The Venue</button>
 </section>
 
 <section id="page-3" class="page">
-  <div class="details-scroll">
-    <div class="dcard">
-      <div class="dcard-label">Groom</div>
-      <div class="dcard-value">L Alex Pravin</div>
-      <p style="font-size: 0.7rem; color: var(--muted);">Son of A Leo John & S Louis Carolin Mary</p>
-    </div>
-    <div class="dcard">
-      <div class="dcard-label">Bride</div>
-      <div class="dcard-value">J Neha Lincy</div>
-      <p style="font-size: 0.7rem; color: var(--muted);">Daughter of V James & D Louis Suguma</p>
-    </div>
-  </div>
-  <button class="btn" onclick="goToPage(4)">Schedule</button>
+  <div class="couple-name">Dindigul</div>
+  <p style="color: var(--muted); letter-spacing: 3px;">TAMIL NADU</p>
+  <button class="btn" onclick="goToPage(3)">Details</button>
 </section>
 
 <section id="page-4" class="page">
   <div class="details-scroll">
     <div class="dcard">
-      <div class="dcard-label">Wedding Mass</div>
-      <div class="dcard-value">10:00 AM</div>
-      <p style="font-size: 0.7rem; color: var(--muted);">St. Joseph's Cathedral</p>
+      <div>
+        <div class="dcard-label">The Groom</div>
+        <div class="dcard-value">L Alex Pravin</div>
+        <div class="dcard-sub">Son of A Leo John & S Louis Carolin Mary</div>
+      </div>
     </div>
     <div class="dcard">
-      <div class="dcard-label">Reception</div>
-      <div class="dcard-value">12:00 PM</div>
-      <p style="font-size: 0.7rem; color: var(--muted);">Vanniar Mahal</p>
+      <div>
+        <div class="dcard-label">The Bride</div>
+        <div class="dcard-value">J Neha Lincy</div>
+        <div class="dcard-sub">Daughter of V James & D Louis Suguma</div>
+      </div>
+    </div>
+  </div>
+  <button class="btn" onclick="goToPage(4)">Schedule</button>
+</section>
+
+<section id="page-5" class="page">
+  <div class="details-scroll">
+    <div class="dcard">
+      <div>
+        <div class="dcard-label">Ceremony</div>
+        <div class="dcard-value">10:00 AM</div>
+        <div class="dcard-sub">St. Joseph's Cathedral, Dindigul</div>
+      </div>
+    </div>
+    <div class="dcard">
+      <div>
+        <div class="dcard-label">Reception</div>
+        <div class="dcard-value">12:00 PM</div>
+        <div class="dcard-sub">Vanniar Mahal, Dindigul</div>
+      </div>
     </div>
   </div>
   <button class="btn" onclick="goToPage(5)">Memories</button>
 </section>
 
-<section id="page-5" class="page">
-  <div class="photo-wrap">
-    <div class="frame"><img src="both.jpeg"></div>
-  </div>
-</section>
-
 <section id="page-6" class="page">
   <div class="photo-wrap">
-    <div class="frame"><img src="lovely_mischeif.jpg"></div>
+    <div class="photo-kicker">Together</div>
+    <div class="frame">
+      <img src="both.jpeg" alt="Alex and Neha">
+    </div>
   </div>
 </section>
 
 <section id="page-7" class="page">
   <div class="photo-wrap">
-    <div class="frame"><img src="beach.jpg"></div>
-    <p class="couple-name" style="font-size: 1.2rem; margin-top: 20px;">See you there!</p>
+    <div class="photo-kicker">Moments</div>
+    <div class="frame">
+      <img src="lovely_mischeif.jpg" alt="Lovely Mischief">
+    </div>
+  </div>
+</section>
+
+<section id="page-8" class="page">
+  <div class="photo-wrap">
+    <div class="photo-kicker">Forever</div>
+    <div class="frame">
+      <img src="beach.jpg" alt="Beach Moment">
+    </div>
+    <div class="photo-caption">Thank you for celebrating with us</div>
   </div>
 </section>
 
 <div class="drawer" id="drawer">
-  <div class="drawer-handle" onclick="toggleDrawer()">CONTACT INFO ▲</div>
+  <div class="drawer-handle" onclick="toggleDrawer()">
+    Contact  <span class="drawer-arrow">▲</span>
+  </div>
   <div class="drawer-body">
-    <div style="color: var(--gold); font-size: 0.7rem;">LEO JOHN: <span style="color: var(--cream);">+91 91501 06035</span></div>
-    <div style="color: var(--gold); font-size: 0.7rem;">JAMES: <span style="color: var(--cream);">+91 63826 40258</span></div>
+    <div class="cpill">
+      <div class="cpill-name">Leo John</div>
+      <div class="cpill-num">+91 91501 06035</div>
+    </div>
+    <div class="cpill">
+      <div class="cpill-name">James</div>
+      <div class="cpill-num">+91 63826 40258</div>
+    </div>
   </div>
 </div>
 
@@ -240,42 +271,79 @@
   function resize() { W = canvas.width = innerWidth; H = canvas.height = innerHeight; }
   window.addEventListener('resize', resize); resize();
 
+  const PC = [[255,182,193],[255,160,180],[253,208,220],[240,148,172]];
+
   class Petal {
-    constructor() {
-      this.x = Math.random()*W; this.y = -10;
-      this.size = Math.random()*4 + 2;
-      this.vx = (Math.random()-.5); this.vy = Math.random()*1 + 1;
+    constructor(burst) {
+      const r = PC[Math.floor(Math.random() * PC.length)];
+      const a = burst ? (Math.random()*.35+.12) : (Math.random()*.2+.07);
+      this.color = `rgba(${r[0]},${r[1]},${r[2]},${a.toFixed(2)})`;
+      this.size  = Math.random() * 5 + 3;
+      if (burst) {
+        const ang = Math.random() * Math.PI * 2;
+        const sp  = Math.random() * 7 + 3;
+        this.x = W/2; this.y = H/2;
+        this.vx = Math.cos(ang)*sp; this.vy = Math.sin(ang)*sp - 5;
+        this.gravity = .12; this.fade = .016;
+      } else {
+        this.x = Math.random()*W; this.y = -10;
+        this.vx = (Math.random()-.5)*.7; this.vy = Math.random()*.7 + .25;
+        this.gravity = .004; this.fade = .003;
+      }
+      this.rot = Math.random()*Math.PI*2;
+      this.rotSp = (Math.random()-.5)*.05;
       this.alpha = 1;
     }
-    update() { this.x += this.vx; this.y += this.vy; if (this.y > H) this.y = -10; }
-    draw() { ctx.fillStyle = `rgba(201, 164, 110, ${this.alpha})`; ctx.beginPath(); ctx.arc(this.x, this.y, this.size, 0, Math.PI*2); ctx.fill(); }
+    tick() {
+      this.x += this.vx; this.y += this.vy;
+      this.vy += this.gravity;
+      this.rot += this.rotSp; this.alpha -= this.fade;
+    }
+    draw() {
+      ctx.save();
+      ctx.globalAlpha = Math.max(0, this.alpha); ctx.fillStyle = this.color;
+      ctx.translate(this.x, this.y); ctx.rotate(this.rot);
+      ctx.beginPath(); ctx.ellipse(0, 0, this.size, this.size*.55, 0, 0, Math.PI*2);
+      ctx.fill(); ctx.restore();
+    }
   }
-  for(let i=0; i<30; i++) petals.push(new Petal());
-  function anim() { ctx.clearRect(0,0,W,H); petals.forEach(p => { p.update(); p.draw(); }); requestAnimationFrame(anim); }
-  anim();
 
-  let currentPage = 0;
-  const pages = document.querySelectorAll('.page');
-  const dots = document.querySelectorAll('.dot');
+  function burst() { for (let i=0;i<45;i++) petals.push(new Petal(true)); }
+  setInterval(() => { if (currentPage === 0) petals.push(new Petal(false)); }, 700);
+
+  (function loop() {
+    ctx.clearRect(0,0,W,H);
+    petals = petals.filter(p => p.alpha > 0);
+    petals.forEach(p => { p.tick(); p.draw(); });
+    requestAnimationFrame(loop);
+  })();
+
+  const pages = ['page-1','page-2','page-3','page-4','page-5','page-6','page-7','page-8'];
+  const dots  = document.querySelectorAll('.dot');
+  let currentPage = 0, transitioning = false;
 
   function goToPage(idx) {
-    pages[currentPage].classList.remove('active');
-    currentPage = idx;
-    pages[currentPage].classList.add('active');
-    updateUI();
+    if (transitioning || idx === currentPage) return;
+    transitioning = true; burst();
+    const direction = idx > currentPage ? 'forward' : 'back';
+    const old = document.getElementById(pages[currentPage]);
+    const nxt = document.getElementById(pages[idx]);
+    old.classList.remove('active');
+    nxt.classList.add('active');
+    setTimeout(() => { currentPage = idx; updateUI(); transitioning = false; }, 560);
   }
 
   function goBack() { if (currentPage > 0) goToPage(currentPage - 1); }
 
   function updateUI() {
-    dots.forEach((d, i) => d.classList.toggle('active', i === currentPage));
+    dots.forEach((d,i) => d.classList.toggle('active', i === currentPage));
     document.getElementById('back-btn').classList.toggle('visible', currentPage > 0);
-    // Show drawer only on Schedule page (Page 4)
-    document.getElementById('drawer').style.display = (currentPage === 4) ? 'block' : 'none';
+    const drawer = document.getElementById('drawer');
+    drawer.style.display = currentPage === 4 ? '' : 'none';
   }
 
   function toggleDrawer() { document.getElementById('drawer').classList.toggle('open'); }
-  dots.forEach(d => d.addEventListener('click', () => goToPage(parseInt(d.dataset.page))));
+  dots.forEach(d => d.addEventListener('click', () => goToPage(+d.dataset.page)));
   updateUI();
 </script>
 
